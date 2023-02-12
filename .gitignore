@@ -282,6 +282,8 @@ ServiceFabricBackup /
 # Файл настроек плагина GhostDoc
 * .GhostDoc.xml
 
+
+
 # Инструменты Node.js для Visual Studio
 .ntvs_analysis.dat
 узлы_модули /

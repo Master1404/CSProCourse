@@ -396,3 +396,15 @@ FodyWeavers.xsd
 
 # Наездник JetBrains
 * .sln.iml
+HW1/HW1/obj/HW1.csproj.nuget.dgspec.json
+HW1/HW1/obj/HW1.csproj.nuget.g.props
+HW1/HW1/obj/HW1.csproj.nuget.g.targets
+HW1/HW1/obj/project.assets.json
+HW1/HW1/obj/project.nuget.cache
+HW1/HW1/obj/Debug/net6.0/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs
+HW1/HW1/obj/Debug/net6.0/HW1.AssemblyInfo.cs
+HW1/HW1/obj/Debug/net6.0/HW1.AssemblyInfoInputs.cache
+HW1/HW1/obj/Debug/net6.0/HW1.assets.cache
+HW1/HW1/obj/Debug/net6.0/HW1.csproj.AssemblyReference.cache
+HW1/HW1/obj/Debug/net6.0/HW1.GeneratedMSBuildEditorConfig.editorconfig
+HW1/HW1/obj/Debug/net6.0/HW1.GlobalUsings.g.cs

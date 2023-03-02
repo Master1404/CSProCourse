@@ -9,14 +9,29 @@ namespace Logistic.ConsoleClient
 {
     public class Vehicle
     {
-        public string Number { get; set; }  
-        public int MaxCargoWeightKg { get; set; }  
-        public double MaxCargoWeightPnd { get; set; } 
+        public string Number { get; set; }
+        public int MaxCargoWeightKg { get; set; }
+        public double MaxCargoWeightPnd { get; set; }
         public double MaxCargoVolume { get; set; }
-        public  VehicleType Type { get; set; }   
-        public List<Cargo> Cargos { get; set; } = new List<Cargo>(100); 
-        
-        public Vehicle(VehicleType type, int maxCargoWeightKg, double maxCargoVolume, string number="0000", double maxCarcoWeightPnd = 0.0)
+        public VehicleType Type { get; set; }
+        public List<Cargo> Cargos { get; set; } = new List<Cargo>(100);
+        public int CurrentWeight
+        {
+            get
+            {
+                return Cargos?.Sum(c => c.Weight) ?? 0;
+            }
+        }
+
+        public double CurrentVolume
+        {
+            get
+            {
+                return Cargos?.Sum(c => c.Volume) ?? 0;
+            }
+        }
+
+        public Vehicle(VehicleType type, int maxCargoWeightKg, double maxCargoVolume, string number = "0000", double maxCarcoWeightPnd = 0.0)
         {
             Type = type;
             Number = number;
@@ -25,14 +40,14 @@ namespace Logistic.ConsoleClient
             MaxCargoWeightPnd = maxCarcoWeightPnd;
         }
 
-        public string GetCargoVolumeLeft()  
+        public string GetCargoVolumeLeft()
         {
-            return $"Remaining cargo volume: {MaxCargoVolume - GetCurrentVolume()} cubic meters";
+            return $"Remaining cargo volume: {MaxCargoVolume - CurrentVolume} cubic meters";
         }
 
         public string GetCargoWeightLeft(WeightUnit weightUnit)
         {
-            double remainingWeight = MaxCargoWeightKg - GetCurrentWeigth();
+            double remainingWeight = MaxCargoWeightKg - CurrentWeight;
             string result = string.Empty;
             switch (weightUnit)
             {
@@ -46,25 +61,25 @@ namespace Logistic.ConsoleClient
                 default:
                     break;
             }
-            return result ;
+            return result;
         }
 
-        public string GetInformation() 
+        public string GetInformation()
         {
             return $"Number = {Number}, " +
                 $"Max Cargo WeightKg = {MaxCargoWeightKg}, " +
                 $"Max Cargo WeightPnd = {MaxCargoWeightPnd}, " +
                 $"Max Cargo Volume = {MaxCargoVolume}, " +
                 $"Type = {Type}, " +
-                $"Currenr Weight = {GetCurrentWeigth()}, " +
-                $"Current Volume = {GetCurrentVolume()}\n";
+                $"Currenr Weight = {CurrentWeight}, " +
+                $"Current Volume = {CurrentVolume}\n";
         }
 
-        public void LoadCargo(Cargo cargo) 
+        public void LoadCargo(Cargo cargo)
         {
             if (Cargos == null)
             {
-                Cargos= new List<Cargo>();
+                Cargos = new List<Cargo>();
             }
 
             if (cargo != null)
@@ -80,13 +95,13 @@ namespace Logistic.ConsoleClient
                 weight += cargo.Weight;
                 if (weight > MaxCargoWeightKg)
                 {
-                    throw new Exception($"Current Weight = {GetCurrentWeigth()} kg, imposible to add this cargo({cargo.Weight} kg), because maxWeigth {MaxCargoWeightKg} kg \n");
+                    throw new Exception($"Current Weight = {CurrentWeight} kg, imposible to add this cargo({cargo.Weight} kg), because maxWeigth {MaxCargoWeightKg} kg \n");
                 }
 
                 volume += cargo.Volume;
                 if (volume > MaxCargoVolume)
                 {
-                    throw new Exception($"Current Volume {GetCurrentVolume()} cubic meters, imposible to add this cargo({cargo.Volume} cubic meters),because maxWeigth {MaxCargoVolume} cubic meters \n");
+                    throw new Exception($"Current Volume {CurrentVolume} cubic meters, imposible to add this cargo({cargo.Volume} cubic meters),because maxWeigth {MaxCargoVolume} cubic meters \n");
                 }
 
                 if (weight < MaxCargoWeightKg && volume < MaxCargoVolume)
@@ -94,34 +109,6 @@ namespace Logistic.ConsoleClient
                     Cargos.Add(cargo);
                 }
             }
-        }
-
-        private int GetCurrentWeigth()
-        {
-            int weigth = 0;
-            if (Cargos != null && Cargos.Any())
-            {
-                foreach (var cargo in Cargos)
-                {
-                    weigth += cargo.Weight;
-                }
-            }
-
-            return weigth;
-        }
-
-        private double GetCurrentVolume()
-        {
-            double volume = 0;
-            if (Cargos != null && Cargos.Any())
-            {
-                foreach (var cargo in Cargos)
-                {
-                    volume += cargo.Volume;
-                }
-            }
-
-            return volume;
         }
     }
 }

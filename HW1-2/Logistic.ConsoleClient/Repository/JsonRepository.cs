@@ -20,7 +20,7 @@ namespace Logistic.ConsoleClient.Repository
 
         public void Create(List<Vehicle> entities, string entityName)
         {
-            string timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            string timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff");
             string fileName = $"{entityName}_{timestamp}.json";
             string filePath = Path.Combine(_filePath, fileName);
 

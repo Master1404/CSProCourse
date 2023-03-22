@@ -11,20 +11,30 @@ namespace Logistic.ConsoleClient.Service
     public class VehicleService
     {
         private readonly InMemoryRepository<Vehicle, int> _vehicleRepository;
-        private readonly InMemoryRepository<Cargo, Guid> _cargoRepository;
         private readonly InMemoryRepository<Warehouse, int> _warehouseRepository;
-        private readonly InMemoryRepository<Invoice, Guid> _invoiceRepository;
+        private Vehicle _vehicle;
 
         public VehicleService(
             InMemoryRepository<Vehicle, int> vehicleRepository,
-            InMemoryRepository<Cargo, Guid> cargoRepository,
-            InMemoryRepository<Invoice, Guid> invoiceRepository,
             InMemoryRepository<Warehouse, int> warehouseRepository)
         {
             _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
-            _cargoRepository = cargoRepository ?? throw new ArgumentNullException(nameof(cargoRepository));
-            _invoiceRepository = invoiceRepository ?? throw new ArgumentNullException(nameof(invoiceRepository));
             _warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
+        }
+        public int CurrentWeight
+        {
+            get
+            {
+                return _vehicle.Cargos?.Sum(c => c.Weight) ?? 0;
+            }
+        }
+
+        public double CurrentVolume
+        {
+            get
+            {
+                return _vehicle.Cargos?.Sum(c => c.Volume) ?? 0;
+            }
         }
 
         public void Create(Vehicle vehicle)
@@ -43,25 +53,49 @@ namespace Logistic.ConsoleClient.Service
         {
             _vehicleRepository.DeleteById(id);
         }
+
         public void LoadCargo(Cargo cargo, int vehicleId)
         {
-            // поиск Vehicle по Id
             var vehicle = GetById(vehicleId);
 
-            // проверка на заполненность грузовика
-            if (vehicle.IsFull)
+            
+            if (vehicle.Cargos == null)
             {
-                throw new Exception("Транспортное средство уже заполнено");
+                vehicle.Cargos = new List<Cargo>();
             }
 
-            // загрузка груза в грузовик
-            vehicle.Cargos.Add(cargo);
+            if (cargo != null)
+            {
+                int weight = 0;
+                double volume = 0;
+                foreach (var item in vehicle.Cargos)
+                {
+                    volume += item.Volume;
+                    weight += item.Weight;
+                }
 
-            // обновление данных о грузовике
-            _vehicleRepository.Update(vehicle);
+                weight += cargo.Weight;
+                if (weight > vehicle.MaxCargoWeightKg)
+                {
+                    throw new Exception($"Current Weight = {CurrentWeight} kg," +
+                        $" imposible to add this cargo({cargo.Weight} kg), because maxWeigth {vehicle.MaxCargoWeightKg} kg \n");
+                }
+
+                volume += cargo.Volume;
+                if (volume > vehicle.MaxCargoVolume)
+                {
+                    throw new Exception($"Current Volume {CurrentVolume} cubic meters," +
+                        $" imposible to add this cargo({cargo.Volume} cubic meters),because maxWeigth {vehicle.MaxCargoVolume} cubic meters \n");
+                }
+
+                if (weight < vehicle.MaxCargoWeightKg && volume < vehicle.MaxCargoVolume)
+                {
+                    vehicle.Cargos.Add(cargo);
+                }
+            }
         }
 
-        public void UnloadCargo( int vehicleId, Guid cargoId)
+        public void UnloadCargo(int vehicleId, Guid cargoId)
         {
             var vehicle = _vehicleRepository.GetById(vehicleId);
 
@@ -79,22 +113,10 @@ namespace Logistic.ConsoleClient.Service
 
             vehicle.Cargos.Remove(cargo);
 
-            if (vehicle.IsFull)
+            if (vehicle.Cargos.Count == 0)
             {
-                // Notify warehouse that vehicle is full and ready to be dispatched
+                // Notify warehouse that vehicle is empty
                 _warehouseRepository.ReadAll().FirstOrDefault();
-                
-                // Notify invoice repository that new invoice was created
-                var invoice = new Invoice
-                {
-                    Id = Guid.NewGuid(),
-                    RecipientAddress = "Адрес получателя",
-                    SenderAddress = "Адрес отправителя",
-                    RecipientPhoneNumber = "+380123456789",
-                    SenderPhoneNumber = "+380987654321"
-                };
-
-                _invoiceRepository.Create(invoice);
             }
         }
     }

@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Logistic.ConsoleClient.Model
 {
+
     public class Vehicle: IRecord<int>
     {
-        private bool _isFull;
+        private static int _lastId = 0;
         public int Id { get; set; }
         public string Number { get; set; }
         public int MaxCargoWeightKg { get; set; }
@@ -18,30 +19,10 @@ namespace Logistic.ConsoleClient.Model
         public VehicleType Type { get; set; }
         public List<Cargo> Cargos { get; set; } = new List<Cargo>(100);
 
-        public int CurrentWeight
-        {
-            get
-            {
-                return Cargos?.Sum(c => c.Weight) ?? 0;
-            }
-        }
-
-        public double CurrentVolume
-        {
-            get
-            {
-                return Cargos?.Sum(c => c.Volume) ?? 0;
-            }
-        }
-
-        public bool IsFull
-        {
-            get { return _isFull; }
-            set { _isFull = value; }
-        }
-
         public Vehicle(VehicleType type, int maxCargoWeightKg, double maxCargoVolume, string number = "0000", double maxCarcoWeightPnd = 0.0)
         {
+            _lastId++;
+            Id = _lastId;
             Type = type;
             Number = number;
             MaxCargoWeightKg = maxCargoWeightKg;
@@ -53,39 +34,11 @@ namespace Logistic.ConsoleClient.Model
         {
         }
 
-        public string GetCargoVolumeLeft()
-        {
-            return $"Remaining cargo volume: {MaxCargoVolume - CurrentVolume} cubic meters";
-        }
-
-        public string GetCargoWeightLeft(WeightUnit weightUnit)
-        {
-            double remainingWeight = MaxCargoWeightKg - CurrentWeight;
-            string result = string.Empty;
-            switch (weightUnit)
-            {
-                case WeightUnit.Kilograms:
-                    result = $"Remaining cargo weight: {remainingWeight} kilograms";
-                    break;
-                case WeightUnit.Pounds:
-                    remainingWeight *= 2.20462;
-                    result = $"Remaining cargo weight: {remainingWeight} pounds";
-                    break;
-                default:
-                    break;
-            }
-            return result;
-        }
-
         public string GetInformation()
         {
-            return $"Number = {Number}, " +
-                $"Max Cargo WeightKg = {MaxCargoWeightKg}, " +
-                $"Max Cargo WeightPnd = {MaxCargoWeightPnd}, " +
-                $"Max Cargo Volume = {MaxCargoVolume}, " +
-                $"Type = {Type}, " +
-                $"Currenr Weight = {CurrentWeight}, " +
-                $"Current Volume = {CurrentVolume}\n";
+            return $"Id = {Id}, " +
+                $"Number = {Number}, " +
+                $"Type = {Type}, ";
         }
     }
 }

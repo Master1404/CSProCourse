@@ -12,7 +12,6 @@ namespace Logistic.ConsoleClient.Service
 {
     public class ReportService<T> : IReportService<T>
     {
-        
         public void CreateReport(string fileName, ReportType reportType, List<T> entities)
         {
             string extension = reportType == ReportType.Xml ? ".xml" : ".json";
@@ -31,12 +30,10 @@ namespace Logistic.ConsoleClient.Service
                     file.Write(json);
                 }
             }
-
         }
-
+        
         public List<T> LoadReport(string fileName)
         {
-           
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileName(fileName));
             Console.WriteLine($"Loading report from path: {filePath}");
 
@@ -64,39 +61,5 @@ namespace Logistic.ConsoleClient.Service
                 throw new NotSupportedException("File format is not supported");
             }
         }
-       /* public List<T> LoadReport(string fileName)
-        {
-
-            //string filePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), fileName));
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileName(fileName));
-            // string filePath = Path.Combine(Directory.GetCurrentDirectory(), fileName);
-            //  Console.WriteLine($"Loading report from path: {filePath}");
-            //  string filePath = Path.GetFullPath(fileName);
-            Console.WriteLine($"Loading report from path: {filePath}");
-
-            if (File.Exists(filePath))
-            {
-                throw new FileNotFoundException("File not found", fileName);
-            }
-            string extension = Path.GetExtension(filePath);
-            if (extension == ".xml")
-            {
-                var serializer = new XmlSerializer(typeof(List<T>));
-                using (FileStream stream = File.OpenRead(filePath))
-                {
-                    return (List<T>)serializer.Deserialize(stream);
-                }
-            }
-            else if (extension == ".json")
-            {
-                string json = File.ReadAllText(filePath);
-                return JsonConvert.DeserializeObject<List<T>>(json);
-            }
-            else
-            {
-                throw new NotSupportedException("File format is not supported");
-            }
-        }*/
-
     }
 }

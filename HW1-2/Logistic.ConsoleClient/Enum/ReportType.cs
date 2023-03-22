@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logistic.ConsoleClient
+namespace Logistic.ConsoleClient.Enum
 {
-    public enum WeightUnit
+    public enum ReportType
     {
-        Kilograms,
-        Pounds
+        Xml,
+        Json
     }
 }

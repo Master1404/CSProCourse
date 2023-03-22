@@ -6,52 +6,52 @@ using System.Threading.Tasks;
 
 namespace Logistic.ConsoleClient.Repository
 {
-    public class InMemoryRepository<TEntity, Tid>
+    public abstract class InMemoryRepository<TEntity, Tid>
     {
-        private List<TEntity> _entities;
+        protected List<TEntity> _records = new List<TEntity>();
         private readonly Func<TEntity, Tid> _getId;
 
         public InMemoryRepository(Func<TEntity, Tid> getId)
         {
-            _entities = new List<TEntity>();
+          
             _getId = getId;
         }
 
         public void Create(TEntity entity)
         {
-            _entities.Add(entity);
+            _records.Add(DeepCopy(entity));
         }
-
+        
         public IEnumerable<TEntity> ReadAll()
         {
-            return _entities;
+            return _records.Select(entity => DeepCopy(entity));
         }
 
         public TEntity GetById(Tid id)
         {
-            return _entities.FirstOrDefault(e => _getId(e).Equals(id));
+            var entity = _records.FirstOrDefault(e => _getId(e).Equals(id));
+            return entity != null ? DeepCopy(entity) : default(TEntity);
         }
-
         public bool Update(TEntity entity)
         {
-            var index = _entities.FindIndex(e => _getId(e).Equals(_getId(entity)));
+            var index = _records.FindIndex(e => _getId(e).Equals(_getId(entity)));
             if (index >= 0)
             {
-                _entities[index] = entity;
+                _records[index] = DeepCopy(entity);
                 return true;
             }
             return false;
         }
-
         public bool DeleteById(Tid id)
         {
             var entity = GetById(id);
             if (entity != null)
             {
-                _entities.Remove(entity);
+                _records.Remove(entity);
                 return true;
             }
             return false;
         }
+        protected abstract TEntity DeepCopy(TEntity? entities);
     }
 }

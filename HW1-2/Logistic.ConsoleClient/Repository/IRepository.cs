@@ -11,7 +11,6 @@ namespace Logistic.ConsoleClient.Repository
     where TId : struct, IEquatable<TId>
     {
         void SaveRecords(IEnumerable<IRecord<TId>> records);
-
         TEntity GetRecordById(TId id);
     }
 }

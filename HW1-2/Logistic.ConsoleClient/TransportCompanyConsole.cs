@@ -1,4 +1,5 @@
-﻿using Logistic.ConsoleClient;
+﻿using AutoMapper.Execution;
+using Logistic.ConsoleClient;
 using Logistic.ConsoleClient.Model;
 using Logistic.ConsoleClient.Repository;
 using Logistic.ConsoleClient.Service;
@@ -22,6 +23,7 @@ public class TransportCompanyConsole
     public void AddVehicle()
     {
         Console.WriteLine("Введите данные транспортного средства:");
+
         Console.WriteLine("Номер:");
         string number = Console.ReadLine();
 
@@ -34,18 +36,11 @@ public class TransportCompanyConsole
         Console.WriteLine("Максимальный объем груза:");
         double maxVolume = double.Parse(Console.ReadLine());
 
-        Console.WriteLine("Тип (0 - Авто, 1 - Корабель, 2 - Літак, 3 - Потяг):");
+        Console.WriteLine("Тип (0 - Авто, 1 - Корабль, 2 - Самолет, 3 - Поезд):");
         int typeInt = int.Parse(Console.ReadLine());
         VehicleType type = (VehicleType)typeInt;
-        Vehicle vehicle = new Vehicle()
-        {
-            Number = number,
-            MaxCargoWeightKg = maxWeightKg,
-            MaxCargoWeightPnd = maxWeightPnd,
-            MaxCargoVolume = maxVolume,
-            Type = type
-        };
-
+        Vehicle vehicle = new Vehicle(type, maxWeightKg, maxVolume, number, maxWeightPnd);
+        
         try
         {
             this._vehicleService.Create(vehicle);
@@ -60,15 +55,22 @@ public class TransportCompanyConsole
     public void GetAllVehicles()
     {
         var vehicles = _vehicleService.GetAll();
-        foreach (var vehicle in vehicles) 
+        if (vehicles!=null && vehicles.Any())
         {
-            Console.WriteLine($"Id: {vehicle.Id}, Number: {vehicle.Number}, Type: {vehicle.Type}");
+            foreach (var vehicle in vehicles)
+            {
+                Console.WriteLine(vehicle.GetInformation());
+            }
+        }
+        else
+        {
+            Console.WriteLine("Транспортных средст нет в базе");
         }
     }
 
     public void LoadCargoToWarehouse()
     {
-        Console.WriteLine("Введіть ID склада ");
+        Console.WriteLine("Введите ID склада ");
         int warehouseId = int.Parse(Console.ReadLine());
         Console.Write("Enter cargo code: ");
         string code = Console.ReadLine();
@@ -102,7 +104,7 @@ public class TransportCompanyConsole
     {
         Console.WriteLine("Введите ID складу для разгрузки груза:");
         int warehouseId = int.Parse(Console.ReadLine());
-        var warehouse = _vehicleService.GetById(warehouseId);
+        var warehouse = _warehouseService.GetById(warehouseId);
 
         if (warehouse == null)
         {
@@ -118,7 +120,7 @@ public class TransportCompanyConsole
             return;
         }
 
-        Console.WriteLine($"Выберите груз для разгрузки на транспортном средстве {warehouse.Cargos} (ID: {warehouse.Id}):");
+        Console.WriteLine($"Выберите груз для разгрузки со склада {warehouse.Cargos} (ID: {warehouse.Id}):");
 
         for (int i = 0; i < cargos.Count; i++)
         {
@@ -135,7 +137,7 @@ public class TransportCompanyConsole
 
         var cargo = cargos[choice];
         _warehouseService.UnloadCargo(warehouseId, cargo.Id);
-        Console.WriteLine($"Груз '{cargo.Code}' (ID: {cargo.Id}) был успешно разгружен со склада {warehouse.Type} (ID: {warehouse.Id}).");
+        Console.WriteLine($"Груз '{cargo.Code}' (ID: {cargo.Id}) был успешно разгружен со склада  (ID: {warehouse.Id}).");
     }
     public void UnLoadCargoToVehicle()
     {
@@ -185,7 +187,7 @@ public class TransportCompanyConsole
         var vehicle = vehicles.FirstOrDefault(v => v.Id == vehicleId);
         if (vehicle == null)
         {
-            Console.WriteLine($"Транспортний засіб з таким {vehicleId} не знайдено.");
+            Console.WriteLine($"Транспортное средство с таким ID {vehicleId} не найдено.");
             return;
         }
         if (vehicle.Cargos.Count == 100)
@@ -194,26 +196,33 @@ public class TransportCompanyConsole
             return;
         }
         
-        Console.Write("Введіть код груза: ");
+        Console.Write("Введите код груза: ");
         string code = Console.ReadLine();
 
-        Console.Write("Введіть вагу груза в kg: ");
+        Console.Write("Введите вес груза в kg: ");
         int weight = int.Parse(Console.ReadLine());
 
-        Console.Write("Введіть обем груза в м2: ");
+        Console.Write("Введите обем груза в м2: ");
         double volume = double.Parse(Console.ReadLine());
 
-        Console.Write("Введіть номер отримувача: ");
+        Console.Write("Введите номер получателя: ");
         string recipientPhoneNumber = Console.ReadLine();
 
-        Console.Write("Введіть номер відправника: ");
+        Console.Write("Введите номер отправителя: ");
         string senderPhoneNumber = Console.ReadLine();
 
         var invoice = new Invoice( recipientPhoneNumber,  senderPhoneNumber);
         var cargo = new Cargo(code, weight, volume, invoice);
-
-        vehicle.Cargos.Add(cargo);
-        Console.WriteLine($"Вантаз з кодом {code} завантажений в транспортний засіб з ID {vehicleId}.");
+        try
+        {
+            _vehicleService.LoadCargo(cargo, vehicleId);
+            Console.WriteLine($"Груз с кодом {code} загружен на транспортное средство с ID {vehicleId}.");
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine($"Ошибка во время загрузки груза: {ex.Message}");
+        }
+       
     }
 
     public void GenerateVehicleReportXml()
@@ -231,16 +240,19 @@ public class TransportCompanyConsole
     }
 
     public void LoadReportConsole()
-    {
-        var vehiclesJson = _reportService.LoadReport(@"D:\C#\C-Pro_\CSProCourse\HW1-2\Logistic.ConsoleClient\bin\Debug\net6.0\vehicles.json");
+    {   var vehiclesJson = _reportService.LoadReport(@"D:\C#\C-Pro_\CSProCourse\HW1-2\Logistic.ConsoleClient\bin\Debug\net6.0\vehicles.json");
         var vehiclesXml = _reportService.LoadReport(@"D:\C#\C-Pro_\CSProCourse\HW1-2\Logistic.ConsoleClient\bin\Debug\net6.0\vehicles.xml");
-        Console.WriteLine($"{"Type"} \t  {"Number"} \t  {"MaxCargoWeightKg"} \t  {"MaxCargoVolume"} \t  {"MaxCargoWeightPnd"}");
+        Console.WriteLine($"{"Type"} \t  " +
+            $"{"Number"} \t  " +
+            $"{"MaxCargoWeightKg"} \t " +
+            $" {"MaxCargoVolume"} \t  " +
+            $"{"MaxCargoWeightPnd"}");
         List<Vehicle> vehicles;
         if (vehiclesJson != null)
         {
             vehicles = vehiclesJson;
         }
-        else if (vehiclesXml != null)
+        else if (vehiclesXml!= null )
         {
             vehicles = vehiclesXml;
         }
@@ -251,32 +263,41 @@ public class TransportCompanyConsole
 
         foreach (var vehicle in vehicles)
         {
-            Console.WriteLine($"{vehicle.Type} \t  {vehicle.Number} \t \t \t{vehicle.MaxCargoWeightKg} \t\t\t {vehicle.CurrentVolume} \t \t \t {vehicle.MaxCargoWeightPnd}");
+            Console.WriteLine($"{vehicle.Type} \t " +
+                $" {vehicle.Number} \t \t \t" +
+                $"{vehicle.MaxCargoWeightKg} \t\t\t " +
+                $"{vehicle.MaxCargoVolume} \t \t \t " +
+                $"{vehicle.MaxCargoWeightPnd}");
         }
     }
 
     public void CreateWarehouse()
     {
-        Console.WriteLine("Enter the ID of the warehouse:");
+        Console.WriteLine("что бы создать склад нажми 1:");
         int id = int.Parse(Console.ReadLine());
-
+       // Vehicle vehicle = new Vehicle(type, maxWeightKg, maxVolume, number, maxWeightPnd);
         var warehouse = new Warehouse
         {
-            Id = id,
             Cargos = new List<Cargo>()
         };
 
         _warehouseService.Create(warehouse);
-        Console.WriteLine($"Warehouse with ID {id} has been created.");
+        Console.WriteLine($"Warehouse with ID {warehouse.Id} has been created.");
     }
 
-    internal void GetAllWarehouses()
+    public void GetAllWarehouses()
     {
         var warehouses = _warehouseService.GetAll();
-
-        foreach (var warehous in warehouses)
+        if (warehouses!= null && warehouses.Any())
         {
-            Console.WriteLine($"Warehouse with ID: {warehous.Id}");
+            foreach (var warehous in warehouses)
+            {
+                Console.WriteLine($"Warehouse with ID: {warehous.Id}");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Нет созданых складов, сначала попробуйте добавить склад");
         }
     }
 }

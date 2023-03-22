@@ -11,35 +11,13 @@ namespace Logistic.ConsoleClient.Service
     public class WarehouseService
     {
         private readonly InMemoryRepository<Vehicle, int> _vehicleRepository;
-        private readonly InMemoryRepository<Cargo, Guid> _cargoRepository;
         private readonly InMemoryRepository<Warehouse, int> _warehouseRepository;
-        private readonly InMemoryRepository<Invoice, Guid> _invoiceRepository;
-        private readonly WarehouseService _warehouseService;
-        
-
+     
         public WarehouseService(
             InMemoryRepository<Vehicle, int> vehicleRepository,
-            InMemoryRepository<Cargo, Guid> cargoRepository,
-            InMemoryRepository<Invoice, Guid> invoiceRepository, 
-            InMemoryRepository<Warehouse, int> warehouseRepository,
-             WarehouseService warehouseService)
-        {
-            _vehicleRepository = vehicleRepository;
-            _cargoRepository = cargoRepository;
-            _invoiceRepository = invoiceRepository;
-            _warehouseRepository = warehouseRepository;
-            _warehouseService = warehouseService;
-        }
-
-        public WarehouseService(
-            InMemoryRepository<Vehicle, int> vehicleRepository,
-            InMemoryRepository<Cargo, Guid> cargoRepository,
-            InMemoryRepository<Invoice, Guid> invoiceRepository,
             InMemoryRepository<Warehouse, int> warehouseRepository)
         {
             _vehicleRepository = vehicleRepository;
-            _cargoRepository = cargoRepository;
-            _invoiceRepository = invoiceRepository;
             _warehouseRepository = warehouseRepository;
         }
 
@@ -62,21 +40,17 @@ namespace Logistic.ConsoleClient.Service
         public void LoadCargo(Cargo cargo, int warehouseId)
         {
             // поиск Vehicle по Id
-            //var warehouse = GetById(warehouseId);
             var warehouse = _warehouseRepository.GetById(warehouseId);
             if (warehouse == null)
             {
                 throw new ArgumentException($"Warehouse with id {warehouseId} not found");
             }
-
             // загрузка груза на склад
             warehouse.Cargos.Add(cargo);
-
             // обновление данных о складе
             _warehouseRepository.Update(warehouse);
         }
         
-
         public void UnloadCargo(int warehouseId, Guid cargoId) 
         {
             var warehouse = _warehouseRepository.GetById(warehouseId);
@@ -94,7 +68,6 @@ namespace Logistic.ConsoleClient.Service
             }
 
             warehouse.Cargos.Remove(cargo);
-
         }
     }
 }

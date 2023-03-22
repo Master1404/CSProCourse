@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logistic.ConsoleClient
+namespace Logistic.ConsoleClient.Enum
 {
     public enum VehicleType
     {
-       Car,
-       Ship,
-       Plane,
-       Train
+        Car,
+        Ship,
+        Plane,
+        Train
     }
 }

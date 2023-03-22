@@ -17,6 +17,7 @@ namespace Logistic.ConsoleClient.Model
         public Cargo() { }
         public Cargo(string code, int weight, double volume, Invoice invoice)
         {
+            Id= Guid.NewGuid();
             Code = code;
             Weight = weight;
             Volume = volume;

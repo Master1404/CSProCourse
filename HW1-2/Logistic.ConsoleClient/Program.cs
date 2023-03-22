@@ -1,17 +1,14 @@
-﻿using Logistic.ConsoleClient;
+﻿using AutoMapper;
+using Logistic.ConsoleClient;
 using Logistic.ConsoleClient.Model;
 using Logistic.ConsoleClient.Repository;
 using Logistic.ConsoleClient.Service;
 using System.Net.WebSockets;
-
-var vehicleRepo = new InMemoryRepository<Vehicle, int>(v => v.Id);
-var warehouseRepo = new InMemoryRepository<Warehouse, int>(w => w.Id);
-var invoiceRepo = new InMemoryRepository<Invoice, Guid>(b => b.Id);
-var cargoRepo = new InMemoryRepository<Cargo, Guid>(c => c.Id);
-var vehicleService = new VehicleService(vehicleRepo, cargoRepo, invoiceRepo, warehouseRepo);
-var warehouseService = new WarehouseService(vehicleRepo, cargoRepo, invoiceRepo, warehouseRepo );
+var vehicleInMemoryRepository = new VehicleInInMemoryRepository<Vehicle, int>(v => v.Id);
+var warehouseInMemoryRepository = new WarehouseInInMemoryRepository<Warehouse, int>(w => w.Id);
+var vehicleService = new VehicleService(vehicleInMemoryRepository, warehouseInMemoryRepository);
+var warehouseService = new WarehouseService(vehicleInMemoryRepository, warehouseInMemoryRepository);
 var reportService = new ReportService<Vehicle>();
-
 var consoleApp = new TransportCompanyConsole(vehicleService, warehouseService, reportService);
 
 while (true)
@@ -68,12 +65,12 @@ while (true)
                  Console.WriteLine("1. Создать новый склад");
                  Console.WriteLine("2. Получить список всех складов");
                  Console.WriteLine("3. Загрузить груз на склад");
-                 Console.WriteLine("4. Вернуться в главное меню");
+                 Console.WriteLine("4. Розгрузить груз со склада");
+                 Console.WriteLine("5. Вернуться в главное меню");
 
                  string cargoChoice = Console.ReadLine();
                  switch (cargoChoice)
                  {
-                     
                      case "1":
                          consoleApp.CreateWarehouse();
                          break;
@@ -84,8 +81,10 @@ while (true)
                      case "3":
                             consoleApp.LoadCargoToWarehouse();
                          break;
-                     
-                     case "4":
+                    case "4":
+                         consoleApp.UnLoadCargoToWarehouse();
+                     break;
+                    case "5":
                          break;
                      default:
                          Console.WriteLine("Неверный выбор, попробуйте еще раз.");
@@ -96,7 +95,7 @@ while (true)
             Console.WriteLine("Выберите действие:");
             Console.WriteLine("1. Создает Xml Отчет");
             Console.WriteLine("2. Создает Json Отчет");
-            Console.WriteLine("3. Создает Отчет в консоле");
+            Console.WriteLine("3. Создает Отчет в консоле");// нужно переделать, отдельно жсон и хмл
             Console.WriteLine("4. Вернуться в главное меню");
 
             string reportChoice = Console.ReadLine();
@@ -125,7 +124,3 @@ while (true)
             break;
     }
 }
-
-
-
-

@@ -39,15 +39,12 @@ namespace Logistic.ConsoleClient.Service
         }
         public void LoadCargo(Cargo cargo, int warehouseId)
         {
-            // поиск Vehicle по Id
             var warehouse = _warehouseRepository.GetById(warehouseId);
             if (warehouse == null)
             {
                 throw new ArgumentException($"Warehouse with id {warehouseId} not found");
             }
-            // загрузка груза на склад
             warehouse.Cargos.Add(cargo);
-            // обновление данных о складе
             _warehouseRepository.Update(warehouse);
         }
         

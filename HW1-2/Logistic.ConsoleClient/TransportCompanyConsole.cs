@@ -1,5 +1,5 @@
 ﻿using AutoMapper.Execution;
-using Logistic.ConsoleClient;
+using Logistic.ConsoleClient.Enum;
 using Logistic.ConsoleClient.Model;
 using Logistic.ConsoleClient.Repository;
 using Logistic.ConsoleClient.Service;
@@ -12,12 +12,19 @@ public class TransportCompanyConsole
     private VehicleService _vehicleService;
     private WarehouseService _warehouseService;
     private ReportService<Vehicle> _reportService;
+    // private JsonRepository<Vehicle> _jsonRepository;
+    // private XmlRepository<Vehicle> _xmlRepository;
+    private readonly IRepository<Vehicle> _jsonRepository;
+    private readonly IRepository<Vehicle> _xmlRepository;
 
-    public TransportCompanyConsole(VehicleService vehicleService, WarehouseService warehouseService, ReportService<Vehicle> reportService)
+    public TransportCompanyConsole(VehicleService vehicleService, WarehouseService warehouseService,
+                                    ReportService<Vehicle> reportService, JsonRepository<Vehicle> jsonRepository, XmlRepository<Vehicle> xmlRepository)
     {
         this._vehicleService = vehicleService;
         this._warehouseService = warehouseService;
         this._reportService = reportService;
+        _jsonRepository = jsonRepository;
+        _xmlRepository = xmlRepository;
     }
 
     public void AddVehicle()
@@ -228,54 +235,103 @@ public class TransportCompanyConsole
     public void GenerateVehicleReportXml()
     {
         var allVehicles = _vehicleService.GetAll();
-        var reportService = new ReportService<Vehicle>(); ;
-        reportService.CreateReport("vehicles", ReportType.Xml, allVehicles);
+        //var reportService = new ReportService<Vehicle>(); ;
+        _reportService.CreateReport("vehicles", ReportType.Xml, allVehicles);
     }
 
     public void GenerateVehicleReportJson()
     {
         var allVehicles = _vehicleService.GetAll();
-        var reportService = new ReportService<Vehicle>();
-        reportService.CreateReport("vehicles", ReportType.Json, allVehicles);
+       // var reportService = new ReportService<Vehicle>();
+        _reportService.CreateReport("vehicles", ReportType.Json, allVehicles);
     }
 
+    /* public void LoadReportConsole()
+     {
+         var vehiclesXml = _reportService.LoadReport(_xmlRepository.FilePath,ReportType.Xml);
+         var vehiclesJson = _reportService.LoadReport(_jsonRepository.FilePath, ReportType.Json);
+
+         Console.WriteLine($"{"Type"} \t  " +
+             $"{"Number"} \t  " +
+             $"{"MaxCargoWeightKg"} \t " +
+             $" {"MaxCargoVolume"} \t  " +
+             $"{"MaxCargoWeightPnd"}");
+         List<Vehicle> vehicles = null;
+         if (vehiclesJson != null)
+         {
+             vehicles = vehiclesJson;
+         }
+         if (vehiclesXml!= null )
+         {
+             vehicles = vehiclesXml;
+         }
+         if (vehiclesJson == null && vehiclesXml == null)
+         {
+             throw new Exception("No valid vehicles data found.");
+         }
+
+         foreach (var vehicle in vehicles)
+         {
+             Console.WriteLine($"{vehicle.Type} \t " +
+                 $" {vehicle.Number} \t \t \t" +
+                 $"{vehicle.MaxCargoWeightKg} \t\t\t " +
+                 $"{vehicle.MaxCargoVolume} \t \t \t " +
+                 $"{vehicle.MaxCargoWeightPnd}");
+         }
+     }*/
     public void LoadReportConsole()
-    {   var vehiclesJson = _reportService.LoadReport(@"D:\C#\C-Pro_\CSProCourse\HW1-2\Logistic.ConsoleClient\bin\Debug\net6.0\vehicles.json");
-        var vehiclesXml = _reportService.LoadReport(@"D:\C#\C-Pro_\CSProCourse\HW1-2\Logistic.ConsoleClient\bin\Debug\net6.0\vehicles.xml");
-        Console.WriteLine($"{"Type"} \t  " +
-            $"{"Number"} \t  " +
-            $"{"MaxCargoWeightKg"} \t " +
-            $" {"MaxCargoVolume"} \t  " +
-            $"{"MaxCargoWeightPnd"}");
-        List<Vehicle> vehicles;
-        if (vehiclesJson != null)
+    {
+        try
         {
-            vehicles = vehiclesJson;
-        }
-        else if (vehiclesXml!= null )
-        {
-            vehicles = vehiclesXml;
-        }
-        else
-        {
-            throw new Exception("No valid vehicles data found.");
-        }
+            string xmlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vehicles.xml");
+            string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vehicles.json");
 
-        foreach (var vehicle in vehicles)
+            // var vehiclesJson = _reportService.LoadReport(_jsonRepository.FileName, ReportType.Json);
+            var vehiclesXml = _reportService.LoadReport(xmlFilePath, ReportType.Xml);
+            var vehiclesJson = _reportService.LoadReport(jsonFilePath, ReportType.Json);
+
+            
+
+            Console.WriteLine($"" +
+                $"{"Type"} \t " +
+                $" {"Number"} \t  " +
+                $"{"MaxCargoWeightKg"} \t " +
+                $"{"MaxCargoVolume"} \t" +
+                $" {"MaxCargoWeightPnd"}");
+
+            List<Vehicle> vehicles = new List<Vehicle>();
+            if (vehiclesJson != null)
+            {
+                vehicles = vehiclesJson;
+            }
+            if (vehiclesXml != null)
+            {
+                vehicles = vehiclesXml;
+            }
+            if (vehicles.Count == 0)
+            {
+                throw new Exception("No valid vehicles data found.");
+            }
+
+            foreach (var vehicle in vehicles)
+            {
+                Console.WriteLine($"" +
+                    $"{vehicle.Type} \t" +
+                    $" {vehicle.Number} \t \t \t" +
+                    $" {vehicle.MaxCargoWeightKg} \t\t\t " +
+                    $"{vehicle.MaxCargoVolume} \t \t \t " +
+                    $"{vehicle.MaxCargoWeightPnd}");
+            }
+        }
+        catch (Exception ex)
         {
-            Console.WriteLine($"{vehicle.Type} \t " +
-                $" {vehicle.Number} \t \t \t" +
-                $"{vehicle.MaxCargoWeightKg} \t\t\t " +
-                $"{vehicle.MaxCargoVolume} \t \t \t " +
-                $"{vehicle.MaxCargoWeightPnd}");
+            Console.WriteLine($"Error: {ex.Message}");
         }
     }
-
     public void CreateWarehouse()
     {
         Console.WriteLine("что бы создать склад нажми 1:");
         int id = int.Parse(Console.ReadLine());
-       // Vehicle vehicle = new Vehicle(type, maxWeightKg, maxVolume, number, maxWeightPnd);
         var warehouse = new Warehouse
         {
             Cargos = new List<Cargo>()

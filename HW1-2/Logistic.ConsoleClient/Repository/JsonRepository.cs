@@ -6,23 +6,25 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Logistic.ConsoleClient.Model;
 using Logistic.ConsoleClient.Service;
+using Logistic.ConsoleClient.Enum;
 
 namespace Logistic.ConsoleClient.Repository
 {
-    public class JsonRepository<T>: ReportService<T>
+    public class JsonRepository<T>: IRepository<T>
     {
         private readonly string _filePath;
-
+       
         public JsonRepository(string filePath) 
         {
             _filePath = filePath;
         }
-
-        public void Create(List<Vehicle> entities, string entityName)
+        public string FileName { get; set; }
+        public void Create(List<T> entities, string entityName)
         {
-            string timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-fff");
+            string timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
             string fileName = $"{entityName}_{timestamp}.json";
             string filePath = Path.Combine(_filePath, fileName);
+            FileName = filePath;
 
             using (StreamWriter file = File.CreateText(filePath))
             {
@@ -30,16 +32,17 @@ namespace Logistic.ConsoleClient.Repository
                 serializer.Serialize(file, entities);
             }
         }
-
-        public List<Vehicle> Read(string fileName)
+        public List<T> Read(string fileName)
         {
-            string filePath = Path.Combine(_filePath, fileName);
+            FileName = Path.Combine(_filePath, fileName);
 
-            using (StreamReader file = File.OpenText(filePath))
+            using (StreamReader file = File.OpenText(FileName))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                return (List<Vehicle>)serializer.Deserialize(file, typeof(List<Vehicle>));
+                return (List<T>)serializer.Deserialize(file, typeof(List<T>));
             }
         }
+
     }
+
 }

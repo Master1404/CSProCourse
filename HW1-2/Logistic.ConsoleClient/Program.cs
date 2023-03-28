@@ -1,15 +1,24 @@
 ﻿using AutoMapper;
 using Logistic.ConsoleClient;
+using Logistic.ConsoleClient.Enum;
 using Logistic.ConsoleClient.Model;
 using Logistic.ConsoleClient.Repository;
 using Logistic.ConsoleClient.Service;
 using System.Net.WebSockets;
 var vehicleInMemoryRepository = new VehicleInInMemoryRepository<Vehicle, int>(v => v.Id);
 var warehouseInMemoryRepository = new WarehouseInInMemoryRepository<Warehouse, int>(w => w.Id);
+var reportRepositoryJson = new JsonRepository<Vehicle>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports"));
+//var reportRepositoryJson = new JsonRepository<Vehicle>(@"D:\C#\C-Pro_\CSProCourse\HW1-2\Logistic.ConsoleClient\bin\Debug\net6.0\JsonReports");
+var reportRepositoryXml = new XmlRepository<Vehicle>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports"));
+
 var vehicleService = new VehicleService(vehicleInMemoryRepository, warehouseInMemoryRepository);
 var warehouseService = new WarehouseService(vehicleInMemoryRepository, warehouseInMemoryRepository);
-var reportService = new ReportService<Vehicle>();
-var consoleApp = new TransportCompanyConsole(vehicleService, warehouseService, reportService);
+var reportService = new ReportService<Vehicle>(reportRepositoryJson,
+    reportRepositoryXml,
+    reportRepositoryJson.FileName,
+    reportRepositoryXml.FileName);
+var consoleApp = new TransportCompanyConsole(vehicleService, warehouseService, reportService, reportRepositoryJson, reportRepositoryXml);
+
 
 while (true)
 {
@@ -95,7 +104,7 @@ while (true)
             Console.WriteLine("Выберите действие:");
             Console.WriteLine("1. Создает Xml Отчет");
             Console.WriteLine("2. Создает Json Отчет");
-            Console.WriteLine("3. Создает Отчет в консоле");// нужно переделать, отдельно жсон и хмл
+            Console.WriteLine("3. Создает Отчет в консоле");
             Console.WriteLine("4. Вернуться в главное меню");
 
             string reportChoice = Console.ReadLine();

@@ -58,7 +58,6 @@ namespace Logistic.ConsoleClient.Service
         {
             var vehicle = GetById(vehicleId);
 
-            
             if (vehicle.Cargos == null)
             {
                 vehicle.Cargos = new List<Cargo>();
@@ -115,7 +114,6 @@ namespace Logistic.ConsoleClient.Service
 
             if (vehicle.Cargos.Count == 0)
             {
-                // Notify warehouse that vehicle is empty
                 _warehouseRepository.ReadAll().FirstOrDefault();
             }
         }

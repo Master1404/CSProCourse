@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Logistic.ConsoleClient.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,20 +7,24 @@ using System.Threading.Tasks;
 
 namespace Logistic.ConsoleClient.Repository
 {
-    public abstract class InMemoryRepository<TEntity, Tid>
+    public abstract class InMemoryRepository<TEntity, Tid> where TEntity : IRecord<int>
     {
         protected List<TEntity> _records = new List<TEntity>();
+        protected int IdCount = 1;
         private readonly Func<TEntity, Tid> _getId;
 
         public InMemoryRepository(Func<TEntity, Tid> getId)
         {
-          
+
             _getId = getId;
         }
 
         public void Create(TEntity entity)
         {
-            _records.Add(DeepCopy(entity));
+            
+            var entityCopy = DeepCopy(entity);
+            entityCopy.Id = IdCount++;
+            _records.Add(entityCopy);
         }
         
         public IEnumerable<TEntity> ReadAll()

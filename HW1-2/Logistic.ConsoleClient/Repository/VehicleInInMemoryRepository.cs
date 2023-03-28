@@ -22,16 +22,7 @@ namespace Logistic.ConsoleClient.Repository
             });
             var mapper = config.CreateMapper();
             var vehicleCopy = mapper.Map<Vehicle>(vehicle);
-            return new Vehicle
-            {
-                Id = vehicle.Id,
-                Number = vehicle.Number,
-                MaxCargoWeightKg = vehicle.MaxCargoWeightKg,
-                MaxCargoWeightPnd = vehicle.MaxCargoWeightPnd,
-                MaxCargoVolume = vehicle.MaxCargoVolume,
-                Type = vehicle.Type,
-                Cargos = vehicle.Cargos
-            };
+            return vehicleCopy;
         }
     }
 }

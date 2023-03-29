@@ -11,44 +11,27 @@ namespace Logistic.ConsoleClient.Service
     public class VehicleService
     {
         private readonly InMemoryRepository<Vehicle, int> _vehicleRepository;
-        private readonly InMemoryRepository<Warehouse, int> _warehouseRepository;
-        private Vehicle _vehicle;
-
-        public VehicleService(
-            InMemoryRepository<Vehicle, int> vehicleRepository,
-            InMemoryRepository<Warehouse, int> warehouseRepository)
+       
+        public VehicleService(InMemoryRepository<Vehicle, int> vehicleRepository)
         {
             _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
-            _warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
         }
-        public int CurrentWeight
-        {
-            get
-            {
-                return _vehicle.Cargos?.Sum(c => c.Weight) ?? 0;
-            }
-        }
-
-        public double CurrentVolume
-        {
-            get
-            {
-                return _vehicle.Cargos?.Sum(c => c.Volume) ?? 0;
-            }
-        }
-
+       
         public void Create(Vehicle vehicle)
         {
             _vehicleRepository.Create(vehicle);
         }
+
         public Vehicle GetById(int vehicleId)
         {
             return _vehicleRepository.GetById(vehicleId);
         }
+
         public List<Vehicle> GetAll()
         {
             return _vehicleRepository.ReadAll().ToList();
         }
+
         public void Delete(int id)
         {
             _vehicleRepository.DeleteById(id);
@@ -65,31 +48,28 @@ namespace Logistic.ConsoleClient.Service
 
             if (cargo != null)
             {
-                int weight = 0;
-                double volume = 0;
-                foreach (var item in vehicle.Cargos)
+                vehicle.CurrentCargoWeight = vehicle.Cargos.Sum(c => c.Weight) + cargo.Weight;
+                if (vehicle.CurrentCargoWeight > vehicle.MaxCargoWeightKg)
                 {
-                    volume += item.Volume;
-                    weight += item.Weight;
+                    throw new Exception($"Current Weight = {vehicle.CurrentCargoWeight} kg," +
+                        $" impossible to add this cargo({cargo.Weight} kg), because max weight {vehicle.MaxCargoWeightKg} kg \n");
                 }
 
-                weight += cargo.Weight;
-                if (weight > vehicle.MaxCargoWeightKg)
+                vehicle.CurrentCargoVolume = vehicle.Cargos.Sum(c => c.Volume) + cargo.Volume;
+                if (vehicle.CurrentCargoVolume > vehicle.MaxCargoVolume)
                 {
-                    throw new Exception($"Current Weight = {CurrentWeight} kg," +
-                        $" imposible to add this cargo({cargo.Weight} kg), because maxWeigth {vehicle.MaxCargoWeightKg} kg \n");
+                    throw new Exception($"Current Volume {vehicle.CurrentCargoVolume} cubic meters," +
+                        $" impossible to add this cargo({cargo.Volume} cubic meters),because max volume {vehicle.MaxCargoVolume} cubic meters \n");
                 }
 
-                volume += cargo.Volume;
-                if (volume > vehicle.MaxCargoVolume)
+                if (vehicle.CurrentCargoWeight <= vehicle.MaxCargoWeightKg)
                 {
-                    throw new Exception($"Current Volume {CurrentVolume} cubic meters," +
-                        $" imposible to add this cargo({cargo.Volume} cubic meters),because maxWeigth {vehicle.MaxCargoVolume} cubic meters \n");
+                     vehicle.Cargos.Add(cargo);
+                    _vehicleRepository.Update(vehicle);
                 }
-
-                if (weight < vehicle.MaxCargoWeightKg && volume < vehicle.MaxCargoVolume)
+                else
                 {
-                    vehicle.Cargos.Add(cargo);
+                    throw new Exception($"Impossible to add this cargo({cargo.Weight} kg), because it exceeds the maximum weight capacity of the vehicle\n");
                 }
             }
         }
@@ -114,7 +94,8 @@ namespace Logistic.ConsoleClient.Service
 
             if (vehicle.Cargos.Count == 0)
             {
-                _warehouseRepository.ReadAll().FirstOrDefault();
+                _vehicleRepository.ReadAll().FirstOrDefault();
+                _vehicleRepository.Update(vehicle);
             }
         }
     }

@@ -11,6 +11,5 @@ namespace Logistic.ConsoleClient.Service
     {
         void CreateReport(string fileName, ReportType reportType, List<T> entities);
         List<T> LoadReport(string fileName, ReportType reportType);
-
     }
 }

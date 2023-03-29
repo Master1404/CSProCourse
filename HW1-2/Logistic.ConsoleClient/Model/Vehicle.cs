@@ -8,7 +8,6 @@ using Logistic.ConsoleClient.Enum;
 
 namespace Logistic.ConsoleClient.Model
 {
-
     public class Vehicle: IRecord<int>
     {
         private static int _lastId = 0;
@@ -17,6 +16,8 @@ namespace Logistic.ConsoleClient.Model
         public int MaxCargoWeightKg { get; set; }
         public double MaxCargoWeightPnd { get; set; }
         public double MaxCargoVolume { get; set; }
+        public int CurrentCargoWeight { get; set; } 
+        public double CurrentCargoVolume { get; set; }   
         public VehicleType Type { get; set; }
         public List<Cargo> Cargos { get; set; } = new List<Cargo>(100);
 
@@ -37,9 +38,9 @@ namespace Logistic.ConsoleClient.Model
 
         public string GetInformation()
         {
-            return $"Id = {Id}, " +
-                $"Number = {Number}, " +
-                $"Type = {Type}, ";
+            return $"Id = {Id}," +
+                $"Number = {Number}," +
+                $"Type = {Type},";
         }
     }
 }

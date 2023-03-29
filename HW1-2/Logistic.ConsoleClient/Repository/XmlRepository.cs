@@ -32,6 +32,10 @@ namespace Logistic.ConsoleClient.Repository
             {
                 serializer.Serialize(file, entities);
             }
+            string newFileName = $"{entityName}.xml";
+            string newFilePath = Path.Combine(_directoryPath, newFileName);
+            File.Delete(newFilePath);
+            File.Move(filePath, newFilePath);
         }
 
         public List<T> Read(string fileName)

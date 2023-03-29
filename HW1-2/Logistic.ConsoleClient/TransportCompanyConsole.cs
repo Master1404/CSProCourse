@@ -12,17 +12,19 @@ public class TransportCompanyConsole
     private VehicleService _vehicleService;
     private WarehouseService _warehouseService;
     private ReportService<Vehicle> _reportService;
-    // private JsonRepository<Vehicle> _jsonRepository;
-    // private XmlRepository<Vehicle> _xmlRepository;
     private readonly IRepository<Vehicle> _jsonRepository;
     private readonly IRepository<Vehicle> _xmlRepository;
 
-    public TransportCompanyConsole(VehicleService vehicleService, WarehouseService warehouseService,
-                                    ReportService<Vehicle> reportService, JsonRepository<Vehicle> jsonRepository, XmlRepository<Vehicle> xmlRepository)
+    public TransportCompanyConsole(
+        VehicleService vehicleService,
+        WarehouseService warehouseService,
+        ReportService<Vehicle> reportService,
+        JsonRepository<Vehicle> jsonRepository,
+        XmlRepository<Vehicle> xmlRepository)
     {
-        this._vehicleService = vehicleService;
-        this._warehouseService = warehouseService;
-        this._reportService = reportService;
+        _vehicleService = vehicleService;
+        _warehouseService = warehouseService;
+        _reportService = reportService;
         _jsonRepository = jsonRepository;
         _xmlRepository = xmlRepository;
     }
@@ -235,92 +237,81 @@ public class TransportCompanyConsole
     public void GenerateVehicleReportXml()
     {
         var allVehicles = _vehicleService.GetAll();
-        //var reportService = new ReportService<Vehicle>(); ;
         _reportService.CreateReport("vehicles", ReportType.Xml, allVehicles);
     }
 
     public void GenerateVehicleReportJson()
     {
         var allVehicles = _vehicleService.GetAll();
-       // var reportService = new ReportService<Vehicle>();
         _reportService.CreateReport("vehicles", ReportType.Json, allVehicles);
     }
 
-    /* public void LoadReportConsole()
-     {
-         var vehiclesXml = _reportService.LoadReport(_xmlRepository.FilePath,ReportType.Xml);
-         var vehiclesJson = _reportService.LoadReport(_jsonRepository.FilePath, ReportType.Json);
-
-         Console.WriteLine($"{"Type"} \t  " +
-             $"{"Number"} \t  " +
-             $"{"MaxCargoWeightKg"} \t " +
-             $" {"MaxCargoVolume"} \t  " +
-             $"{"MaxCargoWeightPnd"}");
-         List<Vehicle> vehicles = null;
-         if (vehiclesJson != null)
-         {
-             vehicles = vehiclesJson;
-         }
-         if (vehiclesXml!= null )
-         {
-             vehicles = vehiclesXml;
-         }
-         if (vehiclesJson == null && vehiclesXml == null)
-         {
-             throw new Exception("No valid vehicles data found.");
-         }
-
-         foreach (var vehicle in vehicles)
-         {
-             Console.WriteLine($"{vehicle.Type} \t " +
-                 $" {vehicle.Number} \t \t \t" +
-                 $"{vehicle.MaxCargoWeightKg} \t\t\t " +
-                 $"{vehicle.MaxCargoVolume} \t \t \t " +
-                 $"{vehicle.MaxCargoWeightPnd}");
-         }
-     }*/
     public void LoadReportConsole()
     {
         try
         {
-            string xmlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vehicles.xml");
-            string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "vehicles.json");
+            string jsonFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports", "vehicles.json");
+            string xmlFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports", "vehicles.xml");
 
-            // var vehiclesJson = _reportService.LoadReport(_jsonRepository.FileName, ReportType.Json);
-            var vehiclesXml = _reportService.LoadReport(xmlFilePath, ReportType.Xml);
             var vehiclesJson = _reportService.LoadReport(jsonFilePath, ReportType.Json);
+            var vehiclesXml = _reportService.LoadReport(xmlFilePath, ReportType.Xml);
 
-            
+            bool isJsonData = vehiclesJson != null && vehiclesJson.Count > 0;
+            bool isXmlData = vehiclesXml != null && vehiclesXml.Count > 0;
 
-            Console.WriteLine($"" +
-                $"{"Type"} \t " +
-                $" {"Number"} \t  " +
-                $"{"MaxCargoWeightKg"} \t " +
-                $"{"MaxCargoVolume"} \t" +
-                $" {"MaxCargoWeightPnd"}");
-
-            List<Vehicle> vehicles = new List<Vehicle>();
-            if (vehiclesJson != null)
+            if (isJsonData)
             {
-                vehicles = vehiclesJson;
-            }
-            if (vehiclesXml != null)
-            {
-                vehicles = vehiclesXml;
-            }
-            if (vehicles.Count == 0)
-            {
-                throw new Exception("No valid vehicles data found.");
-            }
-
-            foreach (var vehicle in vehicles)
-            {
+                Console.WriteLine("JSON Data:");
                 Console.WriteLine($"" +
-                    $"{vehicle.Type} \t" +
-                    $" {vehicle.Number} \t \t \t" +
-                    $" {vehicle.MaxCargoWeightKg} \t\t\t " +
-                    $"{vehicle.MaxCargoVolume} \t \t \t " +
-                    $"{vehicle.MaxCargoWeightPnd}");
+                    $"{"Type"} \t " +
+                    $"{"Number"} \t  " +
+                    $"{"MaxCargoWeightKg"} \t " +
+                    $"{"MaxCargoVolume"} \t" +
+                    $"{"MaxCargoWeightPnd"}");
+
+                foreach (var vehicle in vehiclesJson)
+                {
+                    Console.WriteLine($"" +
+                        $"{vehicle.Type} \t" +
+                        $"{vehicle.Number} \t \t \t " +
+                        $"{vehicle.MaxCargoWeightKg} \t\t\t " +
+                        $"{vehicle.MaxCargoVolume} \t \t \t " +
+                        $"{vehicle.MaxCargoWeightPnd}");
+                }
+            }
+            else if (!isJsonData)
+            {
+                Console.WriteLine("No data found in JSON file.");
+            }
+
+            if (isXmlData)
+            {
+                Console.WriteLine("XML Data:");
+                Console.WriteLine($"" +
+                    $"{"Type"} \t " +
+                    $"{"Number"} \t  " +
+                    $"{"MaxCargoWeightKg"} \t " +
+                    $"{"MaxCargoVolume"} \t" +
+                    $" {"MaxCargoWeightPnd"}");
+
+                foreach (var vehicle in vehiclesXml)
+                {
+                    Console.WriteLine($"" +
+                        $"{vehicle.Type} \t" +
+                        $" {vehicle.Number} \t \t \t" +
+                        $" {vehicle.MaxCargoWeightKg} \t\t\t " +
+                        $"{vehicle.MaxCargoVolume} \t \t \t " +
+                        $"{vehicle.MaxCargoWeightPnd}");
+                }
+            }
+            else if (!isXmlData)
+            {
+                Console.WriteLine("No data found in XML file.");
+            }
+
+            if (!isJsonData && !isXmlData)
+            {
+                throw new Exception("No valid vehicles data found in both JSON and XML files.");
             }
         }
         catch (Exception ex)
@@ -338,7 +329,7 @@ public class TransportCompanyConsole
         };
 
         _warehouseService.Create(warehouse);
-        Console.WriteLine($"Warehouse with ID {warehouse.Id} has been created.");
+        Console.WriteLine($"Warehouse  has been created.");
     }
 
     public void GetAllWarehouses()

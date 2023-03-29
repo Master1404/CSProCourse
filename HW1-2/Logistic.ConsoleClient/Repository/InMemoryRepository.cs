@@ -37,6 +37,7 @@ namespace Logistic.ConsoleClient.Repository
             var entity = _records.FirstOrDefault(e => _getId(e).Equals(id));
             return entity != null ? DeepCopy(entity) : default(TEntity);
         }
+
         public bool Update(TEntity entity)
         {
             var index = _records.FindIndex(e => _getId(e).Equals(_getId(entity)));
@@ -47,6 +48,7 @@ namespace Logistic.ConsoleClient.Repository
             }
             return false;
         }
+
         public bool DeleteById(Tid id)
         {
             var entity = GetById(id);
@@ -57,6 +59,7 @@ namespace Logistic.ConsoleClient.Repository
             }
             return false;
         }
+
         protected abstract TEntity DeepCopy(TEntity? entities);
     }
 }

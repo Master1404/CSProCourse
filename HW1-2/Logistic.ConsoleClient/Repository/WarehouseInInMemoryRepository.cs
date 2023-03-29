@@ -20,12 +20,8 @@ namespace Logistic.ConsoleClient.Repository
                 cfg.CreateMap<Warehouse, Warehouse>();
             });
             var mapper = config.CreateMapper();
-            var vehicleCopy = mapper.Map<Warehouse>(warehouse);
-            return new Warehouse
-            {
-                Id = warehouse.Id,
-                Cargos = warehouse.Cargos
-            };
+            var warehouseCopy = mapper.Map<Warehouse>(warehouse);
+            return warehouseCopy;
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Logistic.ConsoleClient.Repository
         {
             _filePath = filePath;
         }
+
         public string FileName { get; set; }
         public void Create(List<T> entities, string entityName)
         {
@@ -31,7 +32,12 @@ namespace Logistic.ConsoleClient.Repository
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(file, entities);
             }
+            string newFileName = $"{entityName}.json";
+            string newFilePath = Path.Combine(_filePath, newFileName);
+            File.Delete(newFilePath);
+            File.Move(filePath, newFilePath);
         }
+
         public List<T> Read(string fileName)
         {
             FileName = Path.Combine(_filePath, fileName);
@@ -42,7 +48,5 @@ namespace Logistic.ConsoleClient.Repository
                 return (List<T>)serializer.Deserialize(file, typeof(List<T>));
             }
         }
-
     }
-
 }

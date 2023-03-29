@@ -10,14 +10,10 @@ namespace Logistic.ConsoleClient.Service
 {
     public class WarehouseService
     {
-        private readonly InMemoryRepository<Vehicle, int> _vehicleRepository;
         private readonly InMemoryRepository<Warehouse, int> _warehouseRepository;
      
-        public WarehouseService(
-            InMemoryRepository<Vehicle, int> vehicleRepository,
-            InMemoryRepository<Warehouse, int> warehouseRepository)
+        public WarehouseService(InMemoryRepository<Warehouse, int> warehouseRepository)
         {
-            _vehicleRepository = vehicleRepository;
             _warehouseRepository = warehouseRepository;
         }
 
@@ -25,18 +21,22 @@ namespace Logistic.ConsoleClient.Service
         {
             _warehouseRepository.Create(warehouse);
         }
+
         public Warehouse GetById(int warehouseId)
         {
             return _warehouseRepository.GetById(warehouseId);
         }
+
         public List<Warehouse> GetAll()
         {
             return _warehouseRepository.ReadAll().ToList();
         }
+
         public void Delete(int id)
         {
             _warehouseRepository.DeleteById(id);
         }
+
         public void LoadCargo(Cargo cargo, int warehouseId)
         {
             var warehouse = _warehouseRepository.GetById(warehouseId);
@@ -63,8 +63,8 @@ namespace Logistic.ConsoleClient.Service
             {
                 throw new ArgumentException($"Cargo with id {cargoId} not found in warehouse with id {warehouseId}");
             }
-
             warehouse.Cargos.Remove(cargo);
+            _warehouseRepository.Update(warehouse);
         }
     }
 }

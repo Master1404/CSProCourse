@@ -26,7 +26,10 @@ namespace Logistic.ConsoleClient.Model
 
         public string GetInformation()
         {
-            return $"Code: {Code}, Weight: {Weight} kg, Volume: {Volume} cubic meters, Invoice{Invoice.RecipientPhoneNumber}";
+            return $"Code: {Code}," +
+                $" Weight: {Weight} kg," +
+                $" Volume: {Volume} cubic meters," +
+                $" Invoice{Invoice.RecipientPhoneNumber}";
         }
     }
 }

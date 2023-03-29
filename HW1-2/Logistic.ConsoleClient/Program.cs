@@ -5,20 +5,18 @@ using Logistic.ConsoleClient.Model;
 using Logistic.ConsoleClient.Repository;
 using Logistic.ConsoleClient.Service;
 using System.Net.WebSockets;
+
 var vehicleInMemoryRepository = new VehicleInInMemoryRepository<Vehicle, int>(v => v.Id);
 var warehouseInMemoryRepository = new WarehouseInInMemoryRepository<Warehouse, int>(w => w.Id);
 var reportRepositoryJson = new JsonRepository<Vehicle>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports"));
-//var reportRepositoryJson = new JsonRepository<Vehicle>(@"D:\C#\C-Pro_\CSProCourse\HW1-2\Logistic.ConsoleClient\bin\Debug\net6.0\JsonReports");
 var reportRepositoryXml = new XmlRepository<Vehicle>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports"));
-
-var vehicleService = new VehicleService(vehicleInMemoryRepository, warehouseInMemoryRepository);
-var warehouseService = new WarehouseService(vehicleInMemoryRepository, warehouseInMemoryRepository);
+var vehicleService = new VehicleService(vehicleInMemoryRepository);
+var warehouseService = new WarehouseService(warehouseInMemoryRepository);
 var reportService = new ReportService<Vehicle>(reportRepositoryJson,
     reportRepositoryXml,
     reportRepositoryJson.FileName,
     reportRepositoryXml.FileName);
 var consoleApp = new TransportCompanyConsole(vehicleService, warehouseService, reportService, reportRepositoryJson, reportRepositoryXml);
-
 
 while (true)
 {

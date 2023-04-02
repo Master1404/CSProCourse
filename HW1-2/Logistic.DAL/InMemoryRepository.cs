@@ -1,13 +1,17 @@
-﻿using Logistic.ConsoleClient.Model;
+﻿using AutoMapper;
+using Logistic.Core;
+using Logistic.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logistic.ConsoleClient.Repository
+namespace Logistic.DAL
 {
-    public abstract class InMemoryRepository<TEntity, Tid> where TEntity : IRecord<int>
+    public class InMemoryRepository<TEntity, Tid>: IRepository<TEntity, Tid>
+        where TEntity : class, IRecord<Tid>
+        where Tid : struct, IEquatable<Tid>
     {
         protected List<TEntity> _records = new List<TEntity>();
         protected int IdCount = 1;
@@ -23,7 +27,8 @@ namespace Logistic.ConsoleClient.Repository
         {
             
             var entityCopy = DeepCopy(entity);
-            entityCopy.Id = IdCount++;
+            entityCopy.Id = (Tid)Convert.ChangeType(IdCount++, typeof(Tid));
+            //entityCopy.Id = IdCount++;
             _records.Add(entityCopy);
         }
         
@@ -59,7 +64,15 @@ namespace Logistic.ConsoleClient.Repository
             }
             return false;
         }
-
-        protected abstract TEntity DeepCopy(TEntity? entities);
+        private TEntity DeepCopy(TEntity entity)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TEntity, TEntity>();
+            });
+            var mapper = config.CreateMapper();
+            var entityCopy = mapper.Map<TEntity>(entity);
+            return entityCopy;
+        }
     }
 }

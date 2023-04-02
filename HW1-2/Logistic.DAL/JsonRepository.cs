@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Logistic.ConsoleClient.Model;
-using Logistic.ConsoleClient.Service;
 using Logistic.ConsoleClient.Enum;
+using Logistic.Core;
 
-namespace Logistic.ConsoleClient.Repository
+namespace Logistic.DAL
 {
-    public class JsonRepository<T>: IRepository<T>
+    public class JsonRepository<T>: IReportRepository<T>
     {
         private readonly string _filePath;
        

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Logistic.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logistic.ConsoleClient.Model
+namespace Logistic.Models
 {
     public class Warehouse: IRecord<int>
     {

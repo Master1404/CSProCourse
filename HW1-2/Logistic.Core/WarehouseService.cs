@@ -1,18 +1,20 @@
-﻿using Logistic.ConsoleClient.Model;
-using Logistic.ConsoleClient.Repository;
+﻿using Logistic.Models;
+using Logistic.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Logistic.Model;
 
-namespace Logistic.ConsoleClient.Service
+namespace Logistic.Core
 {
     public class WarehouseService
     {
-        private readonly InMemoryRepository<Warehouse, int> _warehouseRepository;
+
+        private readonly IRepository<Warehouse, int> _warehouseRepository;
      
-        public WarehouseService(InMemoryRepository<Warehouse, int> warehouseRepository)
+        public WarehouseService(IRepository<Warehouse, int> warehouseRepository)
         {
             _warehouseRepository = warehouseRepository;
         }

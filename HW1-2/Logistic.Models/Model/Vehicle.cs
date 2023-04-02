@@ -4,9 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Logistic.ConsoleClient.Enum;
+using Logistic.Model;
+using Logistic.Models.Enum;
 
-namespace Logistic.ConsoleClient.Model
+namespace Logistic.Models
 {
     public class Vehicle: IRecord<int>
     {

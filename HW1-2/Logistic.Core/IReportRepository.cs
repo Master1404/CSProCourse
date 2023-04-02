@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Logistic.ConsoleClient.Model;
+using Logistic.Models;
 
-namespace Logistic.ConsoleClient.Repository
+namespace Logistic.Core
 {
-    public interface IRepository<T>
+    public interface IReportRepository<T>
     {
         string FileName { get; set; }
         void Create(List<T> entities, string fileName);

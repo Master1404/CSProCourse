@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logistic.ConsoleClient.Model
+namespace Logistic.Models
 {
     public interface IRecord<TId>
        where TId : struct, IEquatable<TId>

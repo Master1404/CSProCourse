@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Logistic.ConsoleClient.Enum;
 
-namespace Logistic.ConsoleClient.Service
+namespace Logistic.Core
 {
     public interface IReportService<T>
     {

@@ -1,22 +1,24 @@
-﻿using Logistic.ConsoleClient.Model;
-using Logistic.ConsoleClient.Repository;
+﻿using Logistic.Core;
+using Logistic.Model;
+using Logistic.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Logistic.DAL;
 
-namespace Logistic.ConsoleClient.Service
+namespace Logistic.DAL
 {
     public class VehicleService
     {
-        private readonly InMemoryRepository<Vehicle, int> _vehicleRepository;
-       
-        public VehicleService(InMemoryRepository<Vehicle, int> vehicleRepository)
+        private readonly IRepository<Vehicle, int>  _vehicleRepository;
+
+        public VehicleService(IRepository<Vehicle, int> vehicleRepository)
         {
             _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
         }
-       
+
         public void Create(Vehicle vehicle)
         {
             _vehicleRepository.Create(vehicle);

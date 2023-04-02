@@ -1,4 +1,4 @@
-﻿using Logistic.ConsoleClient.Service;
+﻿using Logistic.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Logistic.ConsoleClient.Repository
+namespace Logistic.DAL
 {
-    public class XmlRepository<T> : IRepository<T>
+    public class XmlRepository<T> : IReportRepository<T>
     {
         private readonly string _directoryPath;
 

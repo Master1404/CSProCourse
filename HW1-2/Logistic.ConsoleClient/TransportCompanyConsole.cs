@@ -1,19 +1,22 @@
 ﻿using AutoMapper.Execution;
 using Logistic.ConsoleClient.Enum;
-using Logistic.ConsoleClient.Model;
-using Logistic.ConsoleClient.Repository;
-using Logistic.ConsoleClient.Service;
+using Logistic;
+using Logistic.Core;
+using Logistic.Model;
+using Logistic.Models;
+using Logistic.Models.Enum;
 using System.Diagnostics;
 using System.Numerics;
 using System.Xml.Linq;
+using Logistic.DAL;
 
 public class TransportCompanyConsole
 {
     private VehicleService _vehicleService;
     private WarehouseService _warehouseService;
     private ReportService<Vehicle> _reportService;
-    private readonly IRepository<Vehicle> _jsonRepository;
-    private readonly IRepository<Vehicle> _xmlRepository;
+    private readonly IReportRepository<Vehicle> _jsonRepository;
+    private readonly IReportRepository<Vehicle> _xmlRepository;
 
     public TransportCompanyConsole(
         VehicleService vehicleService,

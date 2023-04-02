@@ -1,6 +1,6 @@
 ﻿using Logistic.ConsoleClient.Enum;
-using Logistic.ConsoleClient.Model;
-using Logistic.ConsoleClient.Repository;
+using Logistic.Models;
+using Logistic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,14 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Logistic.ConsoleClient.Service
+namespace Logistic.Core
 {
     public class ReportService<T> : IReportService<T>
     {
-        private readonly IRepository<T> _jsonRepository;
-        private readonly IRepository<T> _xmlRepository;
+        private readonly IReportRepository<T> _jsonRepository;
+        private readonly IReportRepository<T> _xmlRepository;
 
-        public ReportService(IRepository<T> jsonRepository, IRepository<T> xmlRepository, string jsonFilePath, string xmlFilePath)
+        public ReportService(IReportRepository<T> jsonRepository, IReportRepository<T> xmlRepository, string jsonFilePath, string xmlFilePath)
         {
             _jsonRepository = jsonRepository;
             _xmlRepository = xmlRepository;

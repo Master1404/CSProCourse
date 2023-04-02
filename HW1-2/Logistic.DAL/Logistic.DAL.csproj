@@ -1,7 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -14,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Logistic.Core\Logistic.Core.csproj" />
-    <ProjectReference Include="..\Logistic.DAL\Logistic.DAL.csproj" />
     <ProjectReference Include="..\Logistic.Models\Logistic.Models.csproj" />
   </ItemGroup>
 

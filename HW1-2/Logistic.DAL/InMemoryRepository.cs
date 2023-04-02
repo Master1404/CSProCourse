@@ -28,7 +28,6 @@ namespace Logistic.DAL
             
             var entityCopy = DeepCopy(entity);
             entityCopy.Id = (Tid)Convert.ChangeType(IdCount++, typeof(Tid));
-            //entityCopy.Id = IdCount++;
             _records.Add(entityCopy);
         }
         

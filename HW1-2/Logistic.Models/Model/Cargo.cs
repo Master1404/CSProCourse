@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Logistic.Model
-{
+{//test
     public class Cargo: IRecord<Guid>
     {
         public Guid Id { get; set; }

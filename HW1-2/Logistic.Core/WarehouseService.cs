@@ -9,7 +9,7 @@ using Logistic.Model;
 
 namespace Logistic.Core
 {
-    public class WarehouseService
+    public class WarehouseService : IService<Warehouse, int>
     {
 
         private readonly IRepository<Warehouse, int> _warehouseRepository;
@@ -21,7 +21,7 @@ namespace Logistic.Core
 
         public void Create(Warehouse warehouse)
         {
-            _warehouseRepository.Create(warehouse);
+            _warehouseRepository.Create(warehouse); 
         }
 
         public Warehouse GetById(int warehouseId)

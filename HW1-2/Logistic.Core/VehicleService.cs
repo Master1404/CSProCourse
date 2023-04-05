@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Logistic.DAL;
+using System.Security.Cryptography;
 
 namespace Logistic.DAL
 {
-    public class VehicleService
+    public class VehicleService: IService<Vehicle, int>
     {
         private readonly IRepository<Vehicle, int>  _vehicleRepository;
 
@@ -19,11 +20,19 @@ namespace Logistic.DAL
             _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
         }
 
-        public void Create(Vehicle vehicle)
+       /* public void Create(Vehicle vehicle)
         {
             _vehicleRepository.Create(vehicle);
-        }
+        }*/
+        public void Create(Vehicle vehicle)
+        {
+            if (vehicle == null)
+            {
+                throw new ArgumentNullException(nameof(vehicle));
+            }
 
+            _vehicleRepository.Create(vehicle);
+        }
         public Vehicle GetById(int vehicleId)
         {
             return _vehicleRepository.GetById(vehicleId);

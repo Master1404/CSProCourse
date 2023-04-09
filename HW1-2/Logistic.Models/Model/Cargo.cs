@@ -10,7 +10,6 @@ namespace Logistic.Model
 {
     public class Cargo: IRecord<Guid>
     {
-        //test
         public Guid Id { get; set; }
         public double Volume { get; set; }
         public int Weight { get; set; }

@@ -40,7 +40,7 @@ namespace Logistic.DAL
 
         public List<T> Read(string fileName)
         {
-            string filePath = Path.Combine(_directoryPath, "reports", fileName);
+            string filePath = Path.Combine(_directoryPath,  fileName);
             FileName = fileName;
             if (!File.Exists(filePath))
             {

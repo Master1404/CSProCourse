@@ -9,12 +9,12 @@ namespace Logistic.Core.Tests
 {
     public class VehicleServiceTests
     {
-        private readonly Mock<IRepository<Vehicle, int>> _mockVehicleRepository;
+        private readonly Mock<IRepository<Vehicle>> _mockVehicleRepository;
         private readonly VehicleService _vehicleService;
         private readonly Fixture _fixture;
         public VehicleServiceTests()
         {
-            _mockVehicleRepository = new Mock<IRepository<Vehicle, int>>();
+            _mockVehicleRepository = new Mock<IRepository<Vehicle>>();
             _vehicleService = new VehicleService(_mockVehicleRepository.Object);
             _fixture = new Fixture();
         }

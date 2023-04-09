@@ -22,8 +22,9 @@ namespace Logistic.Models
         public VehicleType Type { get; set; }
         public List<Cargo> Cargos { get; set; } = new List<Cargo>(100);
 
-        public Vehicle(VehicleType type, int maxCargoWeightKg, double maxCargoVolume, string number = "0000", double maxCarcoWeightPnd = 0.0)
+        public Vehicle( VehicleType type, int maxCargoWeightKg, double maxCargoVolume, string number = "0000", double maxCarcoWeightPnd = 0.0)
         {
+            
             _lastId++;
             Id = _lastId;
             Type = type;

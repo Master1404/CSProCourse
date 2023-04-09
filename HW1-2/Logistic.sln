@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stc", "stc", "{54023792-088
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7132B239-F064-4931-AE2A-66EAA7D1E8A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistic.Core.Tests", "Logistic.Core.Tests\Logistic.Core.Tests.csproj", "{8FD408D6-6C61-4092-897C-BCA5A8A8A99F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logistic.Core.Tests", "Logistic.Core.Tests\Logistic.Core.Tests.csproj", "{8FD408D6-6C61-4092-897C-BCA5A8A8A99F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logistic.DAL.Tests", "Logistic.DAL.Tests\Logistic.DAL.Tests.csproj", "{58A7D596-EEEC-4193-A7E8-E71FDE143A7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logistic.DAL.Tests", "Logistic.DAL.Tests\Logistic.DAL.Tests.csproj", "{58A7D596-EEEC-4193-A7E8-E71FDE143A7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

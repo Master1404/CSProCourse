@@ -4,44 +4,44 @@ using Logistic.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Logistic.DAL
 {
-    public class InMemoryRepository<TEntity, Tid>: IRepository<TEntity, Tid>
-        where TEntity : class, IRecord<Tid>
-        where Tid : struct, IEquatable<Tid>
+    public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : class, IRecord<int>
     {
         protected List<TEntity> _records = new List<TEntity>();
         protected int IdCount = 1;
-        private readonly Func<TEntity, Tid> _getId;
+        private readonly Func<TEntity, int> _getId;
 
-        public InMemoryRepository(Func<TEntity, Tid> getId)
+        public InMemoryRepository(Func<TEntity, int> getId)
         {
-
             _getId = getId;
         }
 
         public void Create(TEntity entity)
         {
-            
             var entityCopy = DeepCopy(entity);
-            entityCopy.Id = (Tid)Convert.ChangeType(IdCount++, typeof(Tid));
+            entityCopy.Id = IdCount;
             _records.Add(entityCopy);
+            IdCount++;
         }
-        
+       
         public IEnumerable<TEntity> ReadAll()
         {
-            return _records.Select(entity => DeepCopy(entity));
+            return _records/*.Select(entity => DeepCopy(entity)).ToList()*/;
         }
 
-        public TEntity GetById(Tid id)
+        public TEntity GetById(int id)
         {
             var entity = _records.FirstOrDefault(e => _getId(e).Equals(id));
             return entity != null ? DeepCopy(entity) : default(TEntity);
         }
-
+        
+        
         public bool Update(TEntity entity)
         {
             var index = _records.FindIndex(e => _getId(e).Equals(_getId(entity)));
@@ -53,7 +53,7 @@ namespace Logistic.DAL
             return false;
         }
 
-        public bool DeleteById(Tid id)
+        public bool DeleteById(int id)
         {
             var entity = GetById(id);
             if (entity != null)
@@ -63,15 +63,17 @@ namespace Logistic.DAL
             }
             return false;
         }
-        private TEntity DeepCopy(TEntity entity)
-        {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<TEntity, TEntity>();
-            });
-            var mapper = config.CreateMapper();
-            var entityCopy = mapper.Map<TEntity>(entity);
-            return entityCopy;
-        }
+
+         private TEntity DeepCopy(TEntity entity)
+         {
+             var config = new MapperConfiguration(cfg =>
+             {
+                 cfg.CreateMap<TEntity, TEntity>();
+             });
+             var mapper = config.CreateMapper();
+             var entityCopy = mapper.Map<TEntity>(entity);
+             return entityCopy;
+         }
     }
+    
 }

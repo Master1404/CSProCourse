@@ -4,8 +4,8 @@ using Logistic.DAL;
 using Logistic.Models;
 using System.Net.WebSockets;
 
-var vehicleInMemoryRepository = new InMemoryRepository<Vehicle, int>(v => v.Id);
-var warehouseInMemoryRepository = new InMemoryRepository<Warehouse, int>(v => v.Id);
+var vehicleInMemoryRepository = new InMemoryRepository<Vehicle>(v => v.Id);
+var warehouseInMemoryRepository = new InMemoryRepository<Warehouse>(v => v.Id);
 var reportRepositoryJson = new JsonRepository<Vehicle>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports"));
 var reportRepositoryXml = new XmlRepository<Vehicle>(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports"));
 var vehicleService = new VehicleService(vehicleInMemoryRepository);

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfVehicle xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Vehicle>
+    <Id>0</Id>
+    <Number>ABC</Number>
+    <MaxCargoWeightKg>10</MaxCargoWeightKg>
+    <MaxCargoWeightPnd>10</MaxCargoWeightPnd>
+    <MaxCargoVolume>10</MaxCargoVolume>
+    <CurrentCargoWeight>10</CurrentCargoWeight>
+    <CurrentCargoVolume>10</CurrentCargoVolume>
+    <Type>Car</Type>
+    <Cargos />
+  </Vehicle>
+</ArrayOfVehicle>

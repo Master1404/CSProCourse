@@ -13,9 +13,9 @@ namespace Logistic.DAL
 {
     public class VehicleService: IService<Vehicle, int>
     {
-        private readonly IRepository<Vehicle, int>  _vehicleRepository;
+        private readonly IRepository<Vehicle>  _vehicleRepository;
 
-        public VehicleService(IRepository<Vehicle, int> vehicleRepository)
+        public VehicleService(IRepository<Vehicle> vehicleRepository)
         {
             _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
         }

@@ -12,15 +12,19 @@ namespace Logistic.Core
     public class WarehouseService : IService<Warehouse, int>
     {
 
-        private readonly IRepository<Warehouse, int> _warehouseRepository;
+        private readonly IRepository<Warehouse> _warehouseRepository;
      
-        public WarehouseService(IRepository<Warehouse, int> warehouseRepository)
+        public WarehouseService(IRepository<Warehouse> warehouseRepository)
         {
             _warehouseRepository = warehouseRepository;
         }
 
         public void Create(Warehouse warehouse)
         {
+            if (warehouse == null)
+            {
+                throw new ArgumentNullException(nameof(warehouse));
+            }
             _warehouseRepository.Create(warehouse); 
         }
 

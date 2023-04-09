@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Logistic.Core
 {
-    public interface IRepository<TEntity, Tid> 
+    public interface IRepository<TEntity> 
     {
         void Create(TEntity entity);
         IEnumerable<TEntity> ReadAll();
-        TEntity GetById(Tid id);
+        TEntity GetById(int id);
         bool Update(TEntity entity);
-        bool DeleteById(Tid id);
+        bool DeleteById(int id);
     }
 }

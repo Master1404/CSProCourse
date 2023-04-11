@@ -26,8 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Logistic.Core\Logistic.Core.csproj" />
-    <ProjectReference Include="..\Logistic.DAL\Logistic.DAL.csproj" />
+    <ProjectReference Include="..\..\src\Logistic.Core\Logistic.Core.csproj" />
+    <ProjectReference Include="..\..\src\Logistic.DAL\Logistic.DAL.csproj" />
+   
   </ItemGroup>
 
   <ItemGroup>

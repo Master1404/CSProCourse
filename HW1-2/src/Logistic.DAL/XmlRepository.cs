@@ -40,11 +40,11 @@ namespace Logistic.DAL
 
         public List<T> Read(string fileName)
         {
-            string filePath = Path.Combine(_directoryPath,  fileName);
+            string filePath = Path.Combine(_directoryPath, "Resources", fileName);
             FileName = fileName;
             if (!File.Exists(filePath))
             {
-                throw new FileNotFoundException($"The file {filePath} does not exist.");
+                 throw new FileNotFoundException($"The file {filePath} does not exist.");
             }
 
             XmlSerializer serializer = new XmlSerializer(typeof(List<T>));

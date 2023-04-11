@@ -39,7 +39,7 @@ namespace Logistic.DAL
 
         public List<T> Read(string fileName)
         {
-            FileName = Path.Combine(_filePath, fileName);
+            FileName = Path.Combine(_filePath, "Resources", fileName);
 
             using (StreamReader file = File.OpenText(FileName))
             {

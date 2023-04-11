@@ -22,7 +22,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void CreateReport_ShouldCallJsonRepository_WhenReportTypeIsJson()
+        public void CreateReport_WhenReportTypeIsJson_ShouldCallJsonRepository()
         {
             // Arrange
             var fileName = "test.json";
@@ -38,7 +38,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void CreateReport_ShouldCallXmlRepository_WhenReportTypeIsXml()
+        public void CreateReport_WhenReportTypeIsXml_ShouldCallXmlRepository()
         {
             // Arrange
             var fileName = "test.xml";
@@ -54,7 +54,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void CreateReport_ShouldThrowArgumentException_WhenUnsupportedReportType()
+        public void CreateReport_WhenUnsupportedReportType_ShouldThrowArgumentException_()
         {
             // Arrange
             var fileName = "test.txt";
@@ -77,7 +77,7 @@ namespace Logistic.Core.Tests
 
 
         [Fact]
-        public void LoadReport_ShouldReturnDeserializedObjects_WhenValidJsonReport()
+        public void LoadReport_WhenValidJsonReport_ShouldReturnDeserializedObjects()
         {
             // Arrange
             var fileName = "valid_report.json";
@@ -99,7 +99,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void LoadReport_ShouldReturnDeserializedObjects_WhenValidXmlReport()
+        public void LoadReport_WhenValidXmlReport_ShouldReturnDeserializedObjects()
         {
             // Arrange
             var fileName = "valid_report.xml";
@@ -121,7 +121,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void LoadReport_ShouldThrowArgumentException_WhenUnsupportedReportType()
+        public void LoadReport_WhenUnsupportedReportType_ShouldThrowArgumentException()
         {
             // Arrange
             var fileName = "invalid_report.txt";
@@ -139,7 +139,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void LoadReport_ShouldThrowFileNotFoundException_WhenFileDoesNotExist()
+        public void LoadReport_WhenFileDoesNotExist_ShouldThrowFileNotFoundException()
         {
             // Arrange
             var fileName = "non_existent_report.json";

@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using AutoFixture.Xunit2;
 using Logistic.DAL;
 using Logistic.Model;
 using Logistic.Models;
@@ -25,7 +26,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void Create_WithValidWarehouse_CallsRepositoryCreate()
+        public void Create_WhenValidWarehouse_CallsRepositoryCreate()
         {
             // Arrange
             var warehouse = new Warehouse { Id = 1 };
@@ -38,7 +39,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void Create_WithNullWarehouse_ThrowsArgumentNullException()
+        public void Create_WhenNullWarehouse_ThrowsArgumentNullException()
         {
             // Arrange
             Warehouse warehouse = null;
@@ -50,7 +51,7 @@ namespace Logistic.Core.Tests
             Assert.Throws<ArgumentNullException>(createWarehouse);
         }
         [Fact]
-        public void GetById_WithValidId_ReturnsVWarehouse()
+        public void GetById_WhenValidId_ReturnsVWarehouse()
         {
             // Arrange
             var warehouseId = 1;
@@ -76,8 +77,22 @@ namespace Logistic.Core.Tests
             // Assert
             Assert.Equal(expectedWarehouse, actualWarehouse);
         }
+        [Theory]
+        [AutoData]
+        public void GetAll_ReturnsAllWarehouse1(List<Warehouse> expectedWarehouse)
+        {
+            // Arrange
+            _mockWarehouseRepository.Setup(x => x.ReadAll()).Returns(expectedWarehouse);
+            var warehouseService = new WarehouseService(_mockWarehouseRepository.Object);
+
+            // Act
+            var actualWarehouse = warehouseService.GetAll();
+
+            // Assert
+            Assert.Equal(expectedWarehouse, actualWarehouse);
+        }
         [Fact]
-        public void Delete_WithValidId_DeletesVehicle()
+        public void Delete_WhenValidId_DeletesVehicle()
         {
             // Arrange
             var vehicleId = 1;
@@ -89,11 +104,11 @@ namespace Logistic.Core.Tests
             _mockWarehouseRepository.Verify(x => x.DeleteById(vehicleId), Times.Once);
         }
         [Fact]
-        public void LoadCargo_ShouldThrowException_WhenWarehouseNotFound()
+        public void LoadCargo_WhenWarehouseNotFound_ShouldThrowException()
         {
             // Arrange
             var cargo = _fixture.Create<Cargo>();
-            var warehouseId = _fixture.Create<int>();
+            var warehouseId = 10;
             _mockWarehouseRepository.Setup(x => x.GetById(warehouseId)).Returns((Warehouse)null);
 
             // Act
@@ -105,7 +120,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void LoadCargo_ShouldAddCargoToWarehouse_WhenWarehouseExists()
+        public void LoadCargo_WhenWarehouseExists_ShouldAddCargoToWarehouse()
         {
             // Arrange
             var cargo = _fixture.Create<Cargo>();
@@ -121,7 +136,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void UnloadCargo_ShouldThrowException_WhenWarehouseNotFound()
+        public void UnloadCargo_WhenWarehouseNotFound_ShouldThrowException()
         {
             // Arrange
             var warehouseId = _fixture.Create<int>();
@@ -137,7 +152,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void UnloadCargo_ShouldThrowException_WhenCargoNotFoundInWarehouse()
+        public void UnloadCargo_WhenCargoNotFoundInWarehouse_ShouldThrowException()
         {
             // Arrange
             var warehouseId = _fixture.Create<int>();
@@ -153,7 +168,7 @@ namespace Logistic.Core.Tests
             Assert.Equal($"Cargo with id {cargoId} not found in warehouse with id {warehouseId}", ex.Message);
         }
         [Fact]
-        public void UnloadCargo_ShouldRemoveCargoFromWarehouse_WhenWarehouseAndCargoExist()
+        public void UnloadCargo_WhenWarehouseAndCargoExist_ShouldRemoveCargoFromWarehouse()
         {
             // Arrange
             var warehouseId = _fixture.Create<int>();

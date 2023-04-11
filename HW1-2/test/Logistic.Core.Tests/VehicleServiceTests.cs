@@ -20,7 +20,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void Create_WithValidVehicle_CallsRepositoryCreate()
+        public void Create_WhenValidVehicle_CallsRepositoryCreate()
         {
             // Arrange
             var vehicle = new Vehicle { Id = 1, Type = VehicleType.Car, MaxCargoWeightKg = 1000, MaxCargoVolume = 10 };
@@ -33,7 +33,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void Create_WithNullVehicle_ThrowsArgumentNullException()
+        public void Create_WhenNullVehicle_ThrowsArgumentNullException()
         {
             // Arrange
             Vehicle vehicle = null;
@@ -45,7 +45,7 @@ namespace Logistic.Core.Tests
             Assert.Throws<ArgumentNullException>(createVehicle);
         }
         [Fact]
-        public void GetById_WithValidId_ReturnsVehicle()
+        public void GetById_WhenValidId_ReturnsVehicle()
         {
             // Arrange
             var vehicleId = 1;
@@ -102,7 +102,7 @@ namespace Logistic.Core.Tests
             _mockVehicleRepository.Verify(x => x.DeleteById(vehicleId), Times.Once);
         }
         [Fact]
-        public void LoadCargo_WithValidCargoAndVehicle_AddsCargoToVehicle()
+        public void LoadCargo_WhenValidCargoAndVehicle_AddsCargoToVehicle()
         {
             // Arrange
             var vehicleId = 1;
@@ -119,7 +119,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void LoadCargo_WithCargoExceedingWeightLimit_ThrowsException()
+        public void LoadCargo_WhenCargoExceedingWeightLimit_ThrowsException()
         {
             // Arrange
             var vehicleId = 1;
@@ -133,7 +133,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void LoadCargo_WithCargoExceedingVolumeLimit_ThrowsException()
+        public void LoadCargo_WhenCargoExceedingVolumeLimit_ThrowsException()
         {
             // Arrange
             var vehicleId = 1;
@@ -146,7 +146,7 @@ namespace Logistic.Core.Tests
             Assert.DoesNotContain(cargo, vehicle.Cargos);
         }
         [Fact]
-        public void UnloadCargo_WithValidCargoAndVehicle_RemovesCargoFromVehicle()
+        public void UnloadCargo_WhenValidCargoAndVehicle_RemovesCargoFromVehicle()
         {
             // Arrange
             var vehicleId = 1;
@@ -163,7 +163,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void UnloadCargo_WithInvalidVehicleId_ThrowsArgumentException()
+        public void UnloadCargo_WhenInvalidVehicleId_ThrowsArgumentException()
         {
             // Arrange
             var vehicleId = 1;
@@ -177,7 +177,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void UnloadCargo_WithInvalidCargoId_ThrowsArgumentException()
+        public void UnloadCargo_WhenInvalidCargoId_ThrowsArgumentException()
         {
             // Arrange
             var vehicleId = 1;
@@ -191,7 +191,7 @@ namespace Logistic.Core.Tests
         }
 
         [Fact]
-        public void UnloadCargo_WithLastCargoInVehicle_RemovesCargoAndUpdatesVehicle()
+        public void UnloadCargo_WhenLastCargoInVehicle_RemovesCargoAndUpdatesVehicle()
         {
             // Arrange
             var vehicleId = 1;

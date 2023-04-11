@@ -28,7 +28,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Logistic.Core\Logistic.Core.csproj" />
+    <ProjectReference Include="..\..\src\Logistic.Core\Logistic.Core.csproj" />
+    
   </ItemGroup>
 
 </Project>

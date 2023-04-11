@@ -53,7 +53,7 @@ namespace Logistic.DAL.Tests
         }
 
         [Fact]
-        public void GetById_ReturnsNull_WhenEntityNotFound()
+        public void GetById_WhenEntityNotFound_ReturnsNull()
         {
             // Arrange
             var entityId = _fixture.Create<int>();
@@ -114,7 +114,7 @@ namespace Logistic.DAL.Tests
         }
 
         [Fact]
-        public void DeleteById_ReturnsFalse_WhenEntityNotFound()
+        public void DeleteById_WhenEntityNotFound_ReturnsFalse()
         {
             // Arrange
             var entityId = _fixture.Create<int>();

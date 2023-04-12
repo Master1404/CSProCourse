@@ -44,6 +44,7 @@ namespace Logistic.Core.Tests
             // Assert
             Assert.Throws<ArgumentNullException>(createVehicle);
         }
+
         [Fact]
         public void GetById_WhenValidId_ReturnsVehicle()
         {
@@ -58,6 +59,7 @@ namespace Logistic.Core.Tests
             // Assert
             Assert.Equal(expectedVehicle, actualVehicle);
         }
+
         [Fact]
         public void GetAll_ReturnsListOfVehicles()
         {
@@ -76,6 +78,7 @@ namespace Logistic.Core.Tests
             // Assert
             Assert.Equal(expectedVehicles, actualVehicles);
         }
+
         [Fact]
         public void GetAll_ReturnsAllVehicles()
         {
@@ -89,6 +92,7 @@ namespace Logistic.Core.Tests
             // Assert
             Assert.Equal(expectedVehicles, actualVehicles);
         }
+
         [Fact]
         public void Delete_WithValidId_DeletesVehicle()
         {
@@ -101,6 +105,7 @@ namespace Logistic.Core.Tests
             // Assert
             _mockVehicleRepository.Verify(x => x.DeleteById(vehicleId), Times.Once);
         }
+
         [Fact]
         public void LoadCargo_WhenValidCargoAndVehicle_AddsCargoToVehicle()
         {
@@ -145,6 +150,7 @@ namespace Logistic.Core.Tests
             Assert.Throws<Exception>(() => _vehicleService.LoadCargo(cargo, vehicleId));
             Assert.DoesNotContain(cargo, vehicle.Cargos);
         }
+
         [Fact]
         public void UnloadCargo_WhenValidCargoAndVehicle_RemovesCargoFromVehicle()
         {

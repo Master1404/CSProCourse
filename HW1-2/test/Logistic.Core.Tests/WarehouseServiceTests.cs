@@ -50,6 +50,7 @@ namespace Logistic.Core.Tests
             // Assert
             Assert.Throws<ArgumentNullException>(createWarehouse);
         }
+
         [Fact]
         public void GetById_WhenValidId_ReturnsVWarehouse()
         {
@@ -77,6 +78,7 @@ namespace Logistic.Core.Tests
             // Assert
             Assert.Equal(expectedWarehouse, actualWarehouse);
         }
+
         [Theory]
         [AutoData]
         public void GetAll_ReturnsAllWarehouse1(List<Warehouse> expectedWarehouse)
@@ -91,6 +93,7 @@ namespace Logistic.Core.Tests
             // Assert
             Assert.Equal(expectedWarehouse, actualWarehouse);
         }
+
         [Fact]
         public void Delete_WhenValidId_DeletesVehicle()
         {
@@ -103,6 +106,7 @@ namespace Logistic.Core.Tests
             // Assert
             _mockWarehouseRepository.Verify(x => x.DeleteById(vehicleId), Times.Once);
         }
+
         [Fact]
         public void LoadCargo_WhenWarehouseNotFound_ShouldThrowException()
         {
@@ -167,6 +171,7 @@ namespace Logistic.Core.Tests
             var ex = Assert.Throws<ArgumentException>(act);
             Assert.Equal($"Cargo with id {cargoId} not found in warehouse with id {warehouseId}", ex.Message);
         }
+
         [Fact]
         public void UnloadCargo_WhenWarehouseAndCargoExist_ShouldRemoveCargoFromWarehouse()
         {

@@ -37,11 +37,19 @@ namespace Logistic.DAL.Tests
             // Assert
             _repository.ReadAll().Should().BeEquivalentTo(new List<Vehicle> { entity });
         }
+
         [Fact]
         public void GetById_ReturnsEntityById()
         {
             // Arrange
-            var expected = new Vehicle { Id = 1, Type = VehicleType.Car, Number = "ase234", MaxCargoVolume = 10, MaxCargoWeightKg = 1000 };
+            var expected = new Vehicle 
+            {
+                Id = 1,
+                Type = VehicleType.Car,
+                Number = "ase234",
+                MaxCargoVolume = 10,
+                MaxCargoWeightKg = 1000 
+            };
                
             _repository.Create(expected);
             
@@ -64,6 +72,7 @@ namespace Logistic.DAL.Tests
             // Assert
             result.Should().BeNull();
         }
+
         [Fact]
         public void Update_UpdatesEntityInRepository()
         {

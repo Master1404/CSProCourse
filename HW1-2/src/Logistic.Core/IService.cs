@@ -12,8 +12,6 @@ namespace Logistic.Core
     public interface IService<TEntity, TId>
         where TEntity : IRecord<TId>
         where TId : struct, IEquatable<TId>
-        // public interface IService<TEntity, TId> where TEntity : IRecord<TId> where TId : struct
-        // public interface IService<TEntity, TId> where TEntity : IRecord<int> 
     {
         void Create(TEntity entity);
         TEntity GetById(int entityId);
@@ -21,6 +19,5 @@ namespace Logistic.Core
         void Delete(int id);
         void LoadCargo(Cargo cargo, int entityId);
         void UnloadCargo(int entityId, Guid cargoId);
-        
     }
 }

@@ -44,6 +44,7 @@ namespace Logistic.Core
             if (!File.Exists(fileName))
             {
                 File.Create(fileName).Dispose();
+
             }
             if (reportType == ReportType.Json)
             {

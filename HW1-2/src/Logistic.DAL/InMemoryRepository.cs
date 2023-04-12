@@ -32,7 +32,7 @@ namespace Logistic.DAL
        
         public IEnumerable<TEntity> ReadAll()
         {
-            return _records/*.Select(entity => DeepCopy(entity)).ToList()*/;
+            return _records.Select(entity => DeepCopy(entity)).ToList();
         }
 
         public TEntity GetById(int id)

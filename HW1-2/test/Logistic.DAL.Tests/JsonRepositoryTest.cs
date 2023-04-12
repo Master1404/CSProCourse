@@ -44,11 +44,9 @@ namespace Logistic.DAL.Tests
         {
             // Arrange
             var testDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "CreateTest");
-            //var testDirectory = Path.Combine(_filePath, "CreateTest");
             Directory.CreateDirectory(testDirectory);
             var testPath = Path.Combine(testDirectory, "json_serializer_Vehicle_test.json");
 
-            
             // Act
             var entities = new List<Vehicle>();
             entities.Add(new Vehicle

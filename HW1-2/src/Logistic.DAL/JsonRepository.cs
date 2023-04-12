@@ -31,6 +31,7 @@ namespace Logistic.DAL
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(file, entities);
             }
+
             string newFileName = $"{entityName}.json";
             string newFilePath = Path.Combine(_filePath, newFileName);
             File.Delete(newFilePath);

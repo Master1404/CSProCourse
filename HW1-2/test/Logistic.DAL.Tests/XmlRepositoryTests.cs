@@ -11,7 +11,6 @@ namespace Logistic.DAL.Tests
     public class XmlRepositoryTests
     {
         private readonly XmlRepository<Vehicle> _xmlRepository;
-
         private readonly string _directoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
         public XmlRepositoryTests()
@@ -76,6 +75,5 @@ namespace Logistic.DAL.Tests
             Assert.Equal(VehicleType.Car, result[0].Type);
             
         }
-
     }
 }

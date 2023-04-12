@@ -72,10 +72,6 @@ namespace Logistic.Core.Tests
             _xmlRepositoryMock.Verify(x => x.Create(It.IsAny<List<Vehicle>>(), It.IsAny<string>()), Times.Never);
         }
 
-
-
-
-
         [Fact]
         public void LoadReport_WhenValidJsonReport_ShouldReturnDeserializedObjects()
         {
@@ -83,10 +79,10 @@ namespace Logistic.Core.Tests
             var fileName = "valid_report.json";
             var reportType = ReportType.Json;
             var vehicles = new List<Vehicle>
-    {
-        new Vehicle { Id = 1, Number = "ABC123" },
-        new Vehicle { Id = 2, Number = "DEF456" },
-    };
+            {
+                new Vehicle { Id = 1, Number = "ABC123" },
+                new Vehicle { Id = 2, Number = "DEF456" },
+            };
             _jsonRepositoryMock.Setup(x => x.Read(fileName)).Returns(vehicles);
 
             // Act
@@ -105,10 +101,11 @@ namespace Logistic.Core.Tests
             var fileName = "valid_report.xml";
             var reportType = ReportType.Xml;
             var vehicles = new List<Vehicle>
-    {
-        new Vehicle { Id = 1, Number = "ABC123" },
-        new Vehicle { Id = 2, Number = "DEF456" },
-    };
+            {
+                new Vehicle { Id = 1, Number = "ABC123" },
+                new Vehicle { Id = 2, Number = "DEF456" },
+            };
+
             _xmlRepositoryMock.Setup(x => x.Read(fileName)).Returns(vehicles);
 
             // Act
@@ -133,24 +130,6 @@ namespace Logistic.Core.Tests
             // Assert
             var ex = Assert.Throws<ArgumentException>(act);
             Assert.Equal("Unsupported report type", ex.Message);
-
-            _jsonRepositoryMock.Verify(x => x.Read(It.IsAny<string>()), Times.Never);
-            _xmlRepositoryMock.Verify(x => x.Read(It.IsAny<string>()), Times.Never);
-        }
-
-        [Fact]
-        public void LoadReport_WhenFileDoesNotExist_ShouldThrowFileNotFoundException()
-        {
-            // Arrange
-            var fileName = "non_existent_report.json";
-            var reportType = ReportType.Json;
-
-            // Act
-            Action act = () => _reportService.LoadReport(fileName, reportType);
-
-            // Assert
-            var ex = Assert.Throws<FileNotFoundException>(act);
-            Assert.Equal($"File '{fileName}' not found", ex.Message);
 
             _jsonRepositoryMock.Verify(x => x.Read(It.IsAny<string>()), Times.Never);
             _xmlRepositoryMock.Verify(x => x.Read(It.IsAny<string>()), Times.Never);

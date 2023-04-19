@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Logistic.Core\Logistic.Core.csproj" />
+    <ProjectReference Include="..\Logistic.DAL\Logistic.DAL.csproj" />
+    <ProjectReference Include="..\Logistic.Models\Logistic.Models.csproj" />
+  </ItemGroup>
+
+</Project>

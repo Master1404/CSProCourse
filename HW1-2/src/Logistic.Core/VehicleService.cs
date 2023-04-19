@@ -20,6 +20,7 @@ namespace Logistic.DAL
             _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
         }
 
+
         public void Create(Vehicle vehicle)
         {
             if (vehicle == null)

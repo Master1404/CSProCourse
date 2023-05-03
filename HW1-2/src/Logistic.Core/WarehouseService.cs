@@ -28,6 +28,17 @@ namespace Logistic.Core
             _warehouseRepository.Create(warehouse); 
         }
 
+        public bool Update(Warehouse warehouse)
+        {
+            if (warehouse == null)
+            {
+                throw new ArgumentNullException(nameof(warehouse));
+                return false;
+            }
+            _warehouseRepository.Update(warehouse);
+            return true;
+        }
+
         public Warehouse GetById(int warehouseId)
         {
             return _warehouseRepository.GetById(warehouseId);

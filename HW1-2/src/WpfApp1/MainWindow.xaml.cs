@@ -3,6 +3,7 @@ using Logistic.DAL;
 using Logistic.Model;
 using Logistic.Models;
 using Logistic.Models.Enum;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,41 +22,53 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using Logistic.ConsoleClient.Enum;
 
 namespace WpfApp1
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
-	{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
         ObservableCollection<Cargo> Cargos = new ObservableCollection<Cargo>();
         ObservableCollection<Vehicle> Vehicles = new ObservableCollection<Vehicle>();
         private VehicleService _vehicleService;
         private InMemoryRepository<Vehicle> _memoryRepository;
+        private string exportPath;
+        private string importPathTextBox;
+        private ReportType reportType;
+        private ReportService<Vehicle> _reportService;
+        private readonly IReportRepository<Vehicle> _jsonRepository;
+        private readonly IReportRepository<Vehicle> _xmlRepository;
+
         public MainWindow()
         {
             InitializeComponent();
-            // создаем экземпляр Vehicle и устанавливаем его в качестве DataContext
             var vehicle = new Vehicle();
             this.DataContext = vehicle;
             _memoryRepository = new InMemoryRepository<Vehicle>(vehicle => vehicle.Id);
             vehicleListView.ItemsSource = Vehicles;
             _vehicleService = new VehicleService(_memoryRepository);
+            var vehicles = new ObservableCollection<Vehicle>();
+            var cargos = new ObservableCollection<Cargo>();
+            vehicleListView.ItemsSource = vehicles;
+            _jsonRepository = new JsonRepository<Vehicle>(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports"));
+            _xmlRepository = new XmlRepository<Vehicle>(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports"));
+            _reportService = new ReportService<Vehicle>(_jsonRepository, _xmlRepository,
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports", "report.json"),
+                System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "reports", "report.xml"));
         }
 
-        
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
             {
-                // Получаем выбранный элемент
                 var selectedVehicle = (Vehicle)e.AddedItems[0];
 
-                // Заполняем поля формы
                 FillFormFields(selectedVehicle);
 
-                // Выделяем выбранный элемент в ListView
                 vehicleListView.SelectedItem = selectedVehicle;
                 var selectedItem = vehicleListView.SelectedItem as Vehicle;
 
@@ -82,7 +95,9 @@ namespace WpfApp1
                 {
                     if (string.IsNullOrWhiteSpace(textBox.Text) || textBox.Text.Length > 20)
                     {
-                        MessageBox.Show("Номер должен содержать не более 6 символов и не быть пустым!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("Номер должен содержать не более 6 символов и не быть пустым!", "Warning",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
                     }
                     else
                     {
@@ -95,7 +110,7 @@ namespace WpfApp1
                 }
             }
         }
-       
+
         private void MaxCargoWeightTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             var textBox = sender as TextBox;
@@ -113,17 +128,19 @@ namespace WpfApp1
                     else
                     {
                         textBox.Foreground = Brushes.Red;
-                        MessageBox.Show("Максимальный вес груза должен быть числом!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("Максимальный вес груза должен быть числом!", "Warning",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
                     }
                 }
             }
         }
+
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBoxItem selectedItem = ComboBox.SelectedItem as ComboBoxItem;
             if (selectedItem != null)
             {
-                
                 string selectedTransportType = selectedItem.Content.ToString();
                 VehicleType transportType;
                 switch (selectedTransportType)
@@ -143,7 +160,6 @@ namespace WpfApp1
                     default:
                         throw new ArgumentException("Invalid transport type selected.");
                 }
-
             }
         }
 
@@ -162,7 +178,9 @@ namespace WpfApp1
                     }
                     else
                     {
-                        MessageBox.Show("Максимальный объем груза должен быть числом.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("Максимальный объем груза должен быть числом.", "Ошибка",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                         textBox.Text = "0";
                     }
                 }
@@ -170,14 +188,11 @@ namespace WpfApp1
         }
         private void Button_Click_Create(object sender, RoutedEventArgs e)
         {
-            // Создаем новый экземпляр Vehicle.
-
             var vehicle = new Vehicle
             {
-                Id = Vehicles.Count + 1 // или какое-то другое значение, которое должно быть у нового транспорта
+                Id = Vehicles.Count + 1 
             };
 
-            // Заполняем свойства Vehicle значениями из соответствующих элементов управления.
             vehicle.Number = NumberTextBox.Text;
             vehicle.MaxCargoWeightKg = int.Parse(MaxCargoWeightTextBox.Text);
             vehicle.MaxCargoVolume = double.Parse(MaxCargoVolumeTextBox.Text);
@@ -204,36 +219,26 @@ namespace WpfApp1
                 }
             }
 
-            // Обновляем список грузов в Vehicle.
-            vehicle.Cargos.Clear();
-            foreach (var cargo in Cargos)
-            {
-                vehicle.Cargos.Add(cargo as Cargo);
-            }
-
-            // Добавляем новый экземпляр Vehicle в нашу коллекцию Vehicles и сохраняем его в репозитории.
             Vehicles.Add(vehicle);
             _vehicleService.Create(vehicle);
-            //_memoryRepository.Update(vehicle);
+            vehicleListView.ItemsSource = Vehicles;
             NumberTextBox.Text = "введите номер";
             MaxCargoWeightTextBox.Text = "0";
             MaxCargoVolumeTextBox.Text = "0";
-            ComboBox.SelectedIndex = 0; // сброс выбранного значения в ComboBox на первый элемент
+            ComboBox.SelectedIndex = 0;
             Cargos.Clear();
         }
 
         private void Button_Click_Update(object sender, RoutedEventArgs e)
         {
-            // получаем выбранный элемент Vehicle из списка vehicleListView
             Vehicle selectedVehicle = (Vehicle)vehicleListView.SelectedItem;
-            
-            // проверяем, что элемент выбран
+
             if (selectedVehicle == null)
             {
                 MessageBox.Show("Please select a vehicle to update.");
                 return;
             }
-            // обновляем свойства выбранного элемента Vehicle
+
             selectedVehicle.Number = NumberTextBox.Text;
             selectedVehicle.MaxCargoWeightKg = int.Parse(MaxCargoWeightTextBox.Text);
             selectedVehicle.MaxCargoVolume = double.Parse(MaxCargoVolumeTextBox.Text);
@@ -259,25 +264,12 @@ namespace WpfApp1
                         throw new ArgumentException("Invalid transport type selected.");
                 }
             }
-
-            // обновляем список грузов в Vehicle
-            selectedVehicle.Cargos.Clear();
-            foreach (var cargo in Cargos)
-            {
-                selectedVehicle.Cargos.Add(cargo as Cargo);
-            }
-
-            // сохраняем изменения в репозитории
-            _memoryRepository.Update(selectedVehicle);
-
-            // сбрасываем значения элементов управления
+            _vehicleService.Update(selectedVehicle);
             NumberTextBox.Text = "введите номер";
             MaxCargoWeightTextBox.Text = "0";
             MaxCargoVolumeTextBox.Text = "0";
-            ComboBox.SelectedIndex = 0; // сброс выбранного значения в ComboBox на первый элемент
+            ComboBox.SelectedIndex = 0;
             Cargos.Clear();
-
-            // обновляем список vehicleListView
             vehicleListView.Items.Refresh();
         }
 
@@ -305,39 +297,184 @@ namespace WpfApp1
                     throw new ArgumentException("Invalid transport type.");
             }
         }
-       
+
         private void Button_Click_Delete(object sender, RoutedEventArgs e)
         {
-            // Получаем выбранный элемент
             var selectedVehicle = vehicleListView.SelectedItem as Vehicle;
 
-            // Проверяем, что элемент не null
             if (selectedVehicle != null)
             {
-                // Удаляем выбранный элемент из репозитория
-                _memoryRepository.DeleteById(selectedVehicle.Id);
-
-                // Обновляем отображение в ListView
+                _vehicleService.Delete(selectedVehicle.Id);
                 Vehicles.Remove(selectedVehicle);
             }
 
-            // Выбираем первый элемент в списке (если он есть)
             if (Vehicles.Count > 0)
             {
                 vehicleListView.SelectedIndex = 0;
             }
             else
             {
-                // Если список пустой, сбрасываем выделение
                 vehicleListView.SelectedItem = null;
             }
         }
-        
         private void LoadCargoButton_Click(object sender, RoutedEventArgs e)
         {
-            CargoWindow cargoWindow = new CargoWindow();
-            cargoWindow.Show();
+            var cargos = new ObservableCollection<Cargo>(Cargos);
+            var selectedVehicle = vehicleListView.SelectedItem as Vehicle;
+            if (selectedVehicle == null)
+            {
+                MessageBox.Show("Выберите транспорт для загрузки грузов.", "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
+            var cargoWindow = new CargoWindow(selectedVehicle, cargos, cargo =>
+            {
+                _vehicleService.LoadCargo(cargo, selectedVehicle.Id);
+                selectedVehicle.Cargos.Add(cargo);
+                _vehicleService.Update(selectedVehicle);
+
+            }, cargo =>
+            {
+                _vehicleService.UnloadCargo(selectedVehicle.Id, cargo.Id);
+                selectedVehicle.Cargos.Remove(cargo);
+                _vehicleService.Update(selectedVehicle);
+            });
+            cargoWindow.ShowDialog();
+
         }
 
+        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl tabControl && tabControl.SelectedItem is TabItem tabItem && tabItem.Header.Equals("Report"))
+            {
+                var vehicles = _vehicleService.GetAll();
+                ListBoxExport.ItemsSource = vehicles;
+            }
+            else if (e.Source is TabControl tabControl2 && tabControl2.SelectedItem is TabItem tabItem2 && tabItem2.Header.Equals("Vehicles"))
+            {
+                vehicleListView.ItemsSource = Vehicles;
+            }
+        }
+
+        private void ComboBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            if (ComboBoxReport.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content is string selectedValue)
+            {
+                if (selectedValue == "JSON")
+                {
+                    reportType = ReportType.Json;
+                }
+                else if (selectedValue == "XML")
+                {
+                    reportType = ReportType.Xml;
+                }
+            }
+        }
+
+        private void Button_Click_Export(object sender, RoutedEventArgs e)
+        {
+            if (ComboBoxReport.SelectedItem == null)
+            {
+                MessageBox.Show("Please select a report type.");
+                return;
+            }
+
+            ReportType reportType = (ComboBoxReport.SelectedItem as ComboBoxItem)?.Content.ToString() switch
+            {
+                "XML" => ReportType.Xml,
+                "JSON" => ReportType.Json,
+                _ => throw new InvalidOperationException("Invalid report type"),
+            };
+
+            var allVehicles = _vehicleService.GetAll();
+            SaveFileDialog saveDialog = new SaveFileDialog();
+
+            switch (reportType)
+            {
+                case ReportType.Json:
+                    saveDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+                    saveDialog.DefaultExt = ".json";
+                    break;
+                case ReportType.Xml:
+                    saveDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+                    saveDialog.DefaultExt = ".xml";
+                    break;
+                default:
+                    MessageBox.Show("Please select an export format");
+                    return;
+            }
+
+            bool? result = saveDialog.ShowDialog();
+
+            if (result == true)
+            {
+                exportPath = saveDialog.FileName;
+                TextBoxExportPath.Text = exportPath; 
+                _reportService.CreateReport("vehicles", reportType, allVehicles);
+                MessageBox.Show("Report saved successfully.");
+            }
+        }
+
+        private void TextBox_TextChanged_Export(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (textBox != null && textBox.Text != exportPath)
+            {
+                exportPath = textBox.Text;
+            }
+        }
+
+        private void Button_Click_Import(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Filter = "JSON and XML files (*.json, *.xml)|*.json;*.xml|All files (*.*)|*.*";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    string filePath = openFileDialog.FileName;
+
+                    List<Vehicle> vehicles = _reportService.LoadReport(filePath, filePath.EndsWith(".json") ? ReportType.Json : ReportType.Xml);
+
+                    if (vehicles != null && vehicles.Count > 0)
+                    {
+                        ListBoxImport.ItemsSource = vehicles;
+                        importPathTextBox = filePath;
+
+                        if (TextBoxImportPath != null)
+                        {
+                            TextBoxImportPath.Text = importPathTextBox;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("No valid vehicles data found in the selected file.", "Error",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred while loading the report: {ex.Message}", "Error", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
+            }
+        }
+
+        private void TextBox_TextChanged_ImportPath(object sender, TextChangedEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                string text = textBox.Text;
+                if (text != importPathTextBox) 
+                {
+                    importPathTextBox = text;
+                }
+            }
+        }
     }
 }

@@ -7,18 +7,94 @@
         mc:Ignorable="d"
         Title="Cargo managment" Height="450" Width="800">
     <Grid>
-
-        <Button Content="Cancel" HorizontalAlignment="Left" Margin="687,390,0,0" VerticalAlignment="Top" Height="34" Width="96" Click="CencelButton_Click"/>
         <GroupBox Header="Remove existing cargo" Margin="10,10,429,10">
             <Grid Height="387">
-                <ListBox Margin="10,10,10,57"/>
-                <Button Content="Unload selected cargo" HorizontalAlignment="Left" Margin="10,343,0,0" VerticalAlignment="Top" Height="34" Width="148" Click="UnloagSelectedButton_Click"/>
+                <ListView x:Name="existingCargoListView" ItemsSource="{Binding SelectedVehicleCargos}"
+          Margin="10,10,10,73"
+          SelectionMode="Single"
+          SelectionChanged="ExistingCargoListView_SelectionChanged">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Code" DisplayMemberBinding="{Binding Code}" Width="100"/>
+                            <GridViewColumn Header="Weight" DisplayMemberBinding="{Binding Weight}" Width="100"/>
+                            <GridViewColumn Header="Volume" DisplayMemberBinding="{Binding Volume}" Width="100"/>
+                            <GridViewColumn Header="Invoice Number" DisplayMemberBinding="{Binding InvoiceNumber}" Width="150"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button Content="Unload selected cargo" HorizontalAlignment="Left" Margin="10,319,0,0" VerticalAlignment="Top" Height="34" Width="148" Click="UnloadSelectedButton_Click"/>
             </Grid>
         </GroupBox>
         <GroupBox Header="Add new cargo" Margin="382,10,17,57">
-            <Grid>
-                <Button Name="SaveDataButton" Content="Save changes" HorizontalAlignment="Left" VerticalAlignment="Top" Height="34" Width="96" Click="SaveDataButton_Click" Margin="283,300,0,0"/>
+            <Grid Margin="10,0,-10,0" Height="309">
+                <Label Content="Code:" HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="CargoCodeTextBox"
+                 HorizontalAlignment="Left"
+                 Height="25"
+                 Margin="161,10,0,0"
+                 TextWrapping="Wrap" 
+                 Text=""
+                 VerticalAlignment="Top"
+                 Width="135"
+                 TextChanged="CargoCodeTextBox_TextChanged"/>
+                <Label Content="Weight:" HorizontalAlignment="Left" Margin="1,41,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="CargoWeightTextBox"
+                 HorizontalAlignment="Left" 
+                 Height="25" Margin="161,40,0,0"
+                 TextWrapping="Wrap" 
+                 Text="" 
+                 VerticalAlignment="Top"
+                 Width="135"
+                 TextChanged="CargoWeightTextBox_TextChanged"/>
+                <Label Content="Volume:" HorizontalAlignment="Left" Margin="0,71,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="CargoVolumeTextBox"
+                 HorizontalAlignment="Left"
+                 Height="25"
+                 Margin="161,70,0,0" 
+                 TextWrapping="Wrap" 
+                 Text=""
+                 VerticalAlignment="Top"
+                 Width="135"
+                 TextChanged="CargoVolumeTextBox_TextChanged"/>
+                <Label Content="Recipient Address:" HorizontalAlignment="Left" Margin="0,100,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="RecipientAddressTextBox"
+                 Text="{Binding RecipientAddress, Mode=TwoWay}"
+                 HorizontalAlignment="Left"
+                 Margin="161,100,0,0"
+                 VerticalAlignment="Top"
+                 Width="135" Height="25"/>
+                <Label Content="Sender Address:" HorizontalAlignment="Left" Margin="0,131,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.843,0.692"/>
+                <TextBox x:Name="SenderAddressTextBox"
+                 Text="{Binding SenderAddress, Mode=TwoWay}"
+                 HorizontalAlignment="Left"
+                 Margin="161,131,0,0"
+                 VerticalAlignment="Top"
+                 Width="135" TextChanged="SenderAddressTextBox_TextChanged" Height="25"/>
+                <Label Content="Recipient Phone Number:" HorizontalAlignment="Left" Margin="0,162,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="RecipientPhoneNumberTextBox"
+                 Text="{Binding RecipientPhoneNumber, Mode=TwoWay}"
+                 HorizontalAlignment="Left"
+                 Margin="161,161,0,0"
+                 VerticalAlignment="Top"
+                 Width="135" Height="25" RenderTransformOrigin="0.476,-0.168"/>
+                <Label Content="Sender Phone Number:" HorizontalAlignment="Left" Margin="0,191,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="SenderPhoneNumberTextBox"
+                 Text="{Binding SenderPhoneNumber, Mode=TwoWay}"
+                 Margin="161,191,93,0"
+                 VerticalAlignment="Top" Height="26"/>
+                <Button Name="SaveDataButton" Content="Save changes" HorizontalAlignment="Left" VerticalAlignment="Top" Height="34" Width="96" Click="SaveDataButton_Click" Margin="266,261,0,0"/>
+                
             </Grid>
         </GroupBox>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="668,367,0,0" VerticalAlignment="Top" Height="34" Width="96" Click="CancelButton_Click"/>
     </Grid>
 </Window>

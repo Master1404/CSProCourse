@@ -22,6 +22,7 @@ namespace Logistic.DAL
         public InMemoryRepository(Func<TEntity, int> getId)
         {
             _getId = getId;
+            _records = new List<TEntity>();
         }
 
         public void Create(TEntity entity)

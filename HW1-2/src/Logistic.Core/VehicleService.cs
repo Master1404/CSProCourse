@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Logistic.DAL;
 using System.Security.Cryptography;
+using Xunit;
 
 namespace Logistic.DAL
 {
@@ -20,6 +21,7 @@ namespace Logistic.DAL
             _vehicleRepository = vehicleRepository ?? throw new ArgumentNullException(nameof(vehicleRepository));
         }
 
+
         public void Create(Vehicle vehicle)
         {
             if (vehicle == null)
@@ -28,6 +30,17 @@ namespace Logistic.DAL
             }
 
             _vehicleRepository.Create(vehicle);
+        }
+      
+        public bool Update(Vehicle vehicle)
+        {
+            if (vehicle == null)
+            {
+                throw new ArgumentNullException(nameof(vehicle));
+                return false;
+            }
+            _vehicleRepository.Update(vehicle);
+            return true;
         }
         public Vehicle GetById(int vehicleId)
         {

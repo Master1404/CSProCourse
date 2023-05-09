@@ -3,6 +3,7 @@ using Logistic.Core;
 using Logistic.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Principal;
@@ -14,12 +15,14 @@ namespace Logistic.DAL
     public class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : class, IRecord<int>
     {
         protected List<TEntity> _records = new List<TEntity>();
+        //protected ObservableCollection<TEntity> _records = new ObservableCollection<TEntity>();
         protected int IdCount = 1;
         private readonly Func<TEntity, int> _getId;
 
         public InMemoryRepository(Func<TEntity, int> getId)
         {
             _getId = getId;
+            _records = new List<TEntity>();
         }
 
         public void Create(TEntity entity)

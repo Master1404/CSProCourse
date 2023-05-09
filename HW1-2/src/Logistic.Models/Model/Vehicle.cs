@@ -33,7 +33,7 @@ namespace Logistic.Models
             MaxCargoVolume = maxCargoVolume;
             MaxCargoWeightPnd = maxCarcoWeightPnd;
         }
-
+     
         public Vehicle()
         {
         }

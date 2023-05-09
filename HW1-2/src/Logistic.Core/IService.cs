@@ -14,6 +14,7 @@ namespace Logistic.Core
         where TId : struct, IEquatable<TId>
     {
         void Create(TEntity entity);
+        bool Update(TEntity entity);
         TEntity GetById(int entityId);
         List<TEntity> GetAll();
         void Delete(int id);

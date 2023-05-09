@@ -62,14 +62,13 @@ namespace WpfApp1
             _updateCargo(cargo);
             existingCargoListView.Items.Refresh();
             existingCargoListView.ItemsSource = _selectedVehicle.Cargos;
-            CargoCodeTextBox.Text = "введите код";
+            CargoCodeTextBox.Text = string.Empty;
             CargoWeightTextBox.Text = "0";
             CargoVolumeTextBox.Text = "0";
-            RecipientAddressTextBox.Text = "---";
-            SenderAddressTextBox.Text = "---";
-            RecipientPhoneNumberTextBox.Text = "---";
-            SenderPhoneNumberTextBox.Text = "---";
-
+            RecipientAddressTextBox.Text = string.Empty;
+            SenderAddressTextBox.Text = string.Empty;
+            RecipientPhoneNumberTextBox.Text = string.Empty;
+            SenderPhoneNumberTextBox.Text = string.Empty;
         }
 
         private void UnloadSelectedButton_Click(object sender, RoutedEventArgs e)

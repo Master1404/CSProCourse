@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Logistic.DAL;
 using System.Security.Cryptography;
-using Xunit;
 
 namespace Logistic.DAL
 {

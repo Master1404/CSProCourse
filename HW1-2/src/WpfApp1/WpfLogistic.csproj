@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Logistic.Core\Logistic.Core.csproj" />
     <ProjectReference Include="..\Logistic.DAL\Logistic.DAL.csproj" />
     <ProjectReference Include="..\Logistic.Models\Logistic.Models.csproj" />

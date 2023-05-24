@@ -69,7 +69,7 @@ namespace Logistic.WebApi.Controllers
             return Ok(vehicles);
         }
 
-        [HttpPost("/load")]
+        [HttpPost("load")]
         public IActionResult LoadCargo(Cargo cargo, int vehicleId)
         {
             _vehicleService.LoadCargo(cargo, vehicleId);

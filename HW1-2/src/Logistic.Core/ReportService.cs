@@ -16,7 +16,7 @@ namespace Logistic.Core
         private readonly IReportRepository<T> _jsonRepository;
         private readonly IReportRepository<T> _xmlRepository;
 
-        public ReportService(IReportRepository<T> jsonRepository, IReportRepository<T> xmlRepository, string jsonFilePath, string xmlFilePath)
+        public ReportService(IReportRepository<T> jsonRepository, IReportRepository<T> xmlRepository, string v, string v1)
         {
             _jsonRepository = jsonRepository;
             _xmlRepository = xmlRepository;

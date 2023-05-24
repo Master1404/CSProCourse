@@ -58,12 +58,14 @@ namespace Logistic.DAL
 
         public bool DeleteById(int id)
         {
-            var entity = GetById(id);
+            var entity = _records.FirstOrDefault(x => x.Id == id);
+
             if (entity != null)
             {
                 _records.Remove(entity);
                 return true;
             }
+
             return false;
         }
 

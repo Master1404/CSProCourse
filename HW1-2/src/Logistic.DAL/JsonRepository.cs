@@ -13,7 +13,7 @@ namespace Logistic.DAL
     {
         private readonly string _filePath;
        
-        public JsonRepository(string filePath) 
+        public JsonRepository(string filePath ) 
         {
             _filePath = filePath;
         }

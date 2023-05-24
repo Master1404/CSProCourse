@@ -56,15 +56,8 @@ namespace Logistic.DAL
             return false;
         }
 
-        public bool DeleteById(int id)//переробить
+        public bool DeleteById(int id)
         {
-            /*var entity = GetById(id);
-            if (entity != null)
-            {
-                _records.Remove(entity);
-                return true;
-            }
-            return false;*/
             var entity = _records.FirstOrDefault(x => x.Id == id);
 
             if (entity != null)

@@ -5,6 +5,7 @@ using Logistic.Models;
 using Logistic.WebApi.Model;
 using System.Runtime.CompilerServices;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,5 +52,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();
+
+

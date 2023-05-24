@@ -25,14 +25,15 @@ namespace Logistic.WebApi.Controllers
         {
             return _warehouseService.GetAll();
         }
+
         [HttpPost]
         public IActionResult Create(WarehouseModel warehouseModel)
         {
             var warehouse = _mapper.Map<Warehouse>(warehouseModel);
             _warehouseService.Create(warehouse);
             return Accepted();
-
         }
+
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] Warehouse warehouse)
         {
@@ -59,20 +60,18 @@ namespace Logistic.WebApi.Controllers
             }
 
             _warehouseService.Delete(existingWarehouse.Id);
-
             var vehicles = _warehouseService.GetAll();
-
             return Ok(vehicles);
         }
 
-        [HttpPost("warehouse/{warehouseId}/load")]
+        [HttpPost("warehouse/load")]
         public IActionResult LoadCargo(Cargo cargo, int warehouseId)
         {
             _warehouseService.LoadCargo(cargo, warehouseId);
             return Accepted();
         }
 
-         [HttpPost("warehouse/{warehouseId}/unload")]
+         [HttpPost("warehouse/unload")]
           public IActionResult UnloadCargo(int warehouseId, Guid cargoId)
           {
               var warehouse = _warehouseService.GetById(warehouseId);
@@ -82,21 +81,18 @@ namespace Logistic.WebApi.Controllers
                   return NotFound();
               }
 
-              var cargo = warehouse.Cargos.FirstOrDefault(c => c.Id == cargoId); // Находим груз по идентификатору
+              var cargo = warehouse.Cargos.FirstOrDefault(c => c.Id == cargoId); 
 
               if (cargo == null)
               {
-                  return NotFound(); // Если груз не найден, возвращаем NotFound
+                  return NotFound(); 
               }
 
-              warehouse.Cargos.Remove(cargo); // Удаляем груз из коллекции Cargos
-
+              warehouse.Cargos.Remove(cargo); 
               _warehouseService.UnloadCargo(warehouseId, cargoId);
               _warehouseService.Update(warehouse);
               var updatedWarehouse = _warehouseService.GetById(warehouseId);
-
               return Ok(updatedWarehouse);
           }
     }
-
 }
